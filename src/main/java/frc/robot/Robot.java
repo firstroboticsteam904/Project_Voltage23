@@ -21,7 +21,8 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private Joystick drivematrix; // driver joystick
-  public static Drivetrain placeholder;
+  public static Drivetrain drivetrain;
+  double deadzone = 0.25;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -34,7 +35,7 @@ public class Robot extends TimedRobot {
     drivematrix = new Joystick(0);
     drivematrix.setYChannel(1);
     drivematrix.setXChannel(4);
-    placeholder = new Drivetrain();
+    drivetrain = new Drivetrain();
 
   }
 
@@ -81,27 +82,53 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    
+  }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    placeholder.arcadeDrive(drivematrix.getY(), drivematrix.getX());
+    drivetrain.arcadeDrive(drivematrix.getY(), drivematrix.getX());
+    double throttledeadzone;
+    double turnratedeadzone;
+
+    if(Math.abs(drivematrix.getY())>deadzone){
+      throttledeadzone = Math.pow(drivematrix.getY(), 1);
+    } else{
+      throttledeadzone = 0;
+    }
+    if(Math.abs(drivematrix.getX())>deadzone){
+      turnratedeadzone = Math.pow(drivematrix.getX(), 1);
+    } else {
+      turnratedeadzone = 0;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   }
 
   /** This function is called once when the robot is disabled. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+
+  }
 
   /** This function is called periodically when disabled. */
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
 
-  /** This function is called once when test mode is enabled. */
-  @Override
-  public void testInit() {}
+  }
 
-  /** This function is called periodically during test mode. */
-  @Override
-  public void testPeriodic() {}
 }
