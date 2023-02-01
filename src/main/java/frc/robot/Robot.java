@@ -21,6 +21,7 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private Joystick drivematrix; // driver joystick
+  private Joystick operation; //operator joystick 
   public static Drivetrain drivetrain;
   double deadzone = 0.25;
   /**
@@ -36,7 +37,9 @@ public class Robot extends TimedRobot {
     drivematrix.setYChannel(1);
     drivematrix.setXChannel(4);
     drivetrain = new Drivetrain();
-
+    operation = new Joystick(1);
+    operation.setYChannel(1);
+    operation.setXChannel(4);
   }
 
   /**

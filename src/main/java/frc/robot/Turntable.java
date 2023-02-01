@@ -5,9 +5,16 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class Turntable extends SubsystemBase {
   /** Creates a new Turntable. */
+
+  private CANSparkMax turntablemotor1 = new CANSparkMax(3, MotorType.kBrushless);
+
+
+
   public Turntable() {}
 
   @Override
