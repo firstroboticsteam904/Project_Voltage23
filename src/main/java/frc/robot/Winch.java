@@ -16,6 +16,10 @@ public class Winch extends SubsystemBase {
 
   public Winch() {}
 
+  public void winchmotorspeed(double speed){
+    winchmotor1.set(speed);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

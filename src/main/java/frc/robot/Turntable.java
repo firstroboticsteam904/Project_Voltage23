@@ -11,11 +11,15 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class Turntable extends SubsystemBase {
   /** Creates a new Turntable. */
 
-  private CANSparkMax turntablemotor1 = new CANSparkMax(3, MotorType.kBrushless);
+  private CANSparkMax turntablemotor1 = new CANSparkMax(17, MotorType.kBrushless);
 
 
 
   public Turntable() {}
+
+  public void turntablespeed(double speed){
+  turntablemotor1.set(speed);
+  }
 
   @Override
   public void periodic() {

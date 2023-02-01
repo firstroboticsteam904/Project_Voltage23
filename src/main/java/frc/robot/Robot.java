@@ -24,6 +24,9 @@ public class Robot extends TimedRobot {
   private Joystick operation; //operator joystick 
   public static Drivetrain drivetrain;
   double deadzone = 0.25;
+  public static Lift lift;
+  public static Turntable turntable;
+  public static Winch winch;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -38,8 +41,9 @@ public class Robot extends TimedRobot {
     drivematrix.setXChannel(4);
     drivetrain = new Drivetrain();
     operation = new Joystick(1);
-    operation.setYChannel(1);
-    operation.setXChannel(4);
+    //operation.setYChannel(1);
+    //operation.setXChannel(4);
+    lift = new Lift();
   }
 
   /**
@@ -107,10 +111,29 @@ public class Robot extends TimedRobot {
       turnratedeadzone = 0;
     }
 
+    if(operation.getRawAxis(1) >= 0.5){
+      lift.liftspeed(0.5);
+    } else if(operation.getRawAxis(1) >= -0.5) {
+      lift.liftspeed(-0.5);
+    } else {
+      lift.liftspeed(0);
+    }
 
+    if(operation.getRawAxis(2) >= 0.5){
+      turntable.turntablespeed(0.5);
+    } else if(operation.getRawAxis(4) >= -0.5){
+      turntable.turntablespeed(-0.5);
+    } else{
+      turntable.turntablespeed(0);
+    }
 
-
-
+    if(operation.getRawButton(6)){
+      winch.winchmotorspeed(0.25);
+    } else if(operation.getRawButton(7)){
+      winch.winchmotorspeed(-0.25);
+    } else {
+      winch.winchmotorspeed(0);
+    }
 
 
 
