@@ -8,6 +8,10 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PneumaticHub;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -21,12 +25,17 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private Joystick drivematrix; // driver joystick
-  private Joystick operation; //operator joystick 
+  private Joystick operation;  
   public static Drivetrain drivetrain;
   double deadzone = 0.25;
   public static Lift lift;
   public static Turntable turntable;
   public static Winch winch;
+  //Compressor pcmCompressor = new Compressor(0, PneumaticsModuleType.REVPH);
+  PneumaticHub m_pH = new PneumaticHub(2); //CAN ID is 2 - check Rev Hardware Client for changes
+  DoubleSolenoid solenoidintake = m_pH.makeDoubleSolenoid(10, 2);
+  DoubleSolenoid solenoidclimb = m_pH.makeDoubleSolenoid(1, 9);
+  DoubleSolenoid solenoidmiddle = m_pH.makeDoubleSolenoid(0, 8);
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -36,14 +45,19 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
-    drivematrix = new Joystick(0);
-    drivematrix.setYChannel(1);
-    drivematrix.setXChannel(4);
+    drivematrix = new Joystick(0); //initialize the driver joystick on port 1
+    drivematrix.setYChannel(1); //initialize the y axis controller on joystick channel 1
+    drivematrix.setXChannel(4); //initialize the x axis controller on joystick channel 4
     drivetrain = new Drivetrain();
-    operation = new Joystick(1);
+    operation = new Joystick(1); //initialize the operator joystick on port 1
     //operation.setYChannel(1);
     //operation.setXChannel(4);
     lift = new Lift();
+    //Pneumatic solenoids are set below. Three solenoids are set to be in reverse, forward, and forward to begin
+    //pcmCompressor.enableDigital();
+    solenoidintake.set(DoubleSolenoid.Value.kReverse);
+    solenoidclimb.set(DoubleSolenoid.Value.kForward);
+    solenoidmiddle.set(DoubleSolenoid.Value.kForward);
   }
 
   /**
@@ -96,20 +110,21 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    drivetrain.arcadeDrive(drivematrix.getY(), drivematrix.getX());
     double throttledeadzone;
     double turnratedeadzone;
 
     if(Math.abs(drivematrix.getY())>deadzone){
-      throttledeadzone = Math.pow(drivematrix.getY(), 1);
+      throttledeadzone = Math.pow(drivematrix.getY(), 3);
     } else{
       throttledeadzone = 0;
     }
     if(Math.abs(drivematrix.getX())>deadzone){
-      turnratedeadzone = Math.pow(drivematrix.getX(), 1);
+      turnratedeadzone = Math.pow(drivematrix.getX(), 3);
     } else {
       turnratedeadzone = 0;
     }
+
+    drivetrain.arcadeDrive(-throttledeadzone, turnratedeadzone);
 
     if(operation.getRawAxis(1) >= 0.5){
       lift.liftspeed(0.5);
@@ -127,12 +142,35 @@ public class Robot extends TimedRobot {
       turntable.turntablespeed(0);
     }
 
+     //if the right bumper button is pressed on the operator controller, activate the winch motor
     if(operation.getRawButton(6)){
       winch.winchmotorspeed(0.25);
-    } else if(operation.getRawButton(7)){
+    } else if(operation.getRawButton(7)){ //if the left trigger button is pressed on the operator controller, deactivate the winch controller
       winch.winchmotorspeed(-0.25);
     } else {
       winch.winchmotorspeed(0);
+    }
+    //if the x button is pressed on the operator controller, set the climb solenoid to the reverse position
+    if (operation.getRawButton(1)) {
+      solenoidclimb.set(DoubleSolenoid.Value.kReverse);
+    }
+    //if the A button is pressed on the operator controller, set the climb solenoid to the forward position
+    if (operation.getRawButton(2)) {
+      solenoidclimb.set(DoubleSolenoid.Value.kForward);
+    }
+    //if the left bumber button is pressed on the operator controller, set the intake solenoid to forward
+    if (operation.getRawButton(5)){
+      solenoidintake.set(DoubleSolenoid.Value.kForward);
+    }
+    else {
+      solenoidintake.set(DoubleSolenoid.Value.kReverse);
+    }
+    //if the right trigger is pressed on the operator controller, set the middle solenoid to the reverse position
+    if (operation.getRawButton(8)){
+      solenoidmiddle.set(DoubleSolenoid.Value.kReverse);
+
+    }  else {
+      solenoidmiddle.set(DoubleSolenoid.Value.kForward);
     }
 
 
