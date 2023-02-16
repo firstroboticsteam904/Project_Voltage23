@@ -126,7 +126,7 @@ public class Robot extends TimedRobot {
 
     drivetrain.arcadeDrive(-throttledeadzone, turnratedeadzone);
 
-    if(operation.getRawAxis(1) >= 0.5){
+/*   if(operation.getRawAxis(1) >= 0.5){
       lift.liftspeed(0.5);
     } else if(operation.getRawAxis(1) >= -0.5) {
       lift.liftspeed(-0.5);
@@ -149,7 +149,7 @@ public class Robot extends TimedRobot {
       winch.winchmotorspeed(-0.25);
     } else {
       winch.winchmotorspeed(0);
-    }
+    }*/
     //if the x button is pressed on the operator controller, set the climb solenoid to the reverse position
     if (operation.getRawButton(1)) {
       solenoidclimb.set(DoubleSolenoid.Value.kReverse);

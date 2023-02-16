@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 
 public class Lift extends SubsystemBase {
   /** Creates a new Lift. */
-  private CANSparkMax liftmotor1 = new CANSparkMax(9, MotorType.kBrushed);
+/*  private CANSparkMax liftmotor1 = new CANSparkMax(9, MotorType.kBrushed);
   private CANSparkMax liftmotor2 = new CANSparkMax(8, MotorType.kBrushed);
   private MotorControllerGroup liftControllerGroup = new MotorControllerGroup(liftmotor1, liftmotor2);
 
@@ -19,7 +19,7 @@ public class Lift extends SubsystemBase {
 
 public void liftspeed(double speed){
   liftControllerGroup.set(speed);
-}
+} */
 
   @Override
   public void periodic() {
