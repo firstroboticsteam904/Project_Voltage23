@@ -28,7 +28,7 @@ public class Drivetrain extends SubsystemBase {
   //private DifferentialDrive m_MyDrivetrain = new DifferentialDrive(leftmotor1, rightmotor1);
 
   public void arcadeDrive(double throttle, double turnrate){
-    m_MyDrivetrain.arcadeDrive(throttle, turnrate, false);
+    m_MyDrivetrain.arcadeDrive(-throttle, -turnrate, false);
   }
 
   @Override

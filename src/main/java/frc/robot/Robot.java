@@ -9,8 +9,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
+//import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.PneumaticHub;
 
 /**
@@ -32,10 +34,12 @@ public class Robot extends TimedRobot {
   public static Turntable turntable;
   public static Winch winch;
   //Compressor pcmCompressor = new Compressor(0, PneumaticsModuleType.REVPH);
-  PneumaticHub m_pH = new PneumaticHub(2); //CAN ID is 2 - check Rev Hardware Client for changes
-  DoubleSolenoid solenoidintake = m_pH.makeDoubleSolenoid(10, 2);
+  //PneumaticHub m_pH = new PneumaticHub();
+  /*DoubleSolenoid solenoidintake = m_pH.makeDoubleSolenoid(10, 2);
   DoubleSolenoid solenoidclimb = m_pH.makeDoubleSolenoid(1, 9);
-  DoubleSolenoid solenoidmiddle = m_pH.makeDoubleSolenoid(0, 8);
+  DoubleSolenoid solenoidmiddle = m_pH.makeDoubleSolenoid(0, 8);*/
+  //public static Solenoid leftDTsolenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
+  //public static Solenoid rightDTsolenoid = new Solenoid(PneumaticsModuleType.REVPH, 1);
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -55,9 +59,10 @@ public class Robot extends TimedRobot {
     lift = new Lift();
     //Pneumatic solenoids are set below. Three solenoids are set to be in reverse, forward, and forward to begin
     //pcmCompressor.enableDigital();
-    solenoidintake.set(DoubleSolenoid.Value.kReverse);
+    /*solenoidintake.set(DoubleSolenoid.Value.kReverse);
     solenoidclimb.set(DoubleSolenoid.Value.kForward);
-    solenoidmiddle.set(DoubleSolenoid.Value.kForward);
+    solenoidmiddle.set(DoubleSolenoid.Value.kForward);*/
+
   }
 
   /**
@@ -124,7 +129,7 @@ public class Robot extends TimedRobot {
       turnratedeadzone = 0;
     }
 
-    drivetrain.arcadeDrive(-throttledeadzone, turnratedeadzone);
+    drivetrain.arcadeDrive(turnratedeadzone, throttledeadzone);
 
 /*   if(operation.getRawAxis(1) >= 0.5){
       lift.liftspeed(0.5);
@@ -151,7 +156,7 @@ public class Robot extends TimedRobot {
       winch.winchmotorspeed(0);
     }*/
     //if the x button is pressed on the operator controller, set the climb solenoid to the reverse position
-    if (operation.getRawButton(1)) {
+/*  if (operation.getRawButton(1)) {
       solenoidclimb.set(DoubleSolenoid.Value.kReverse);
     }
     //if the A button is pressed on the operator controller, set the climb solenoid to the forward position
@@ -172,7 +177,7 @@ public class Robot extends TimedRobot {
     }  else {
       solenoidmiddle.set(DoubleSolenoid.Value.kForward);
     }
-
+*/
 
 
 
