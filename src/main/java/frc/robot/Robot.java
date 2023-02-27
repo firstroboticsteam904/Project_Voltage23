@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Compressor;
-//import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -33,18 +33,18 @@ public class Robot extends TimedRobot {
   public static Lift lift;
   public static Turntable turntable;
   public static Winch winch;
-  //Compressor pcmCompressor = new Compressor(0, PneumaticsModuleType.REVPH);
-  //PneumaticHub m_pH = new PneumaticHub();
-  /*DoubleSolenoid solenoidintake = m_pH.makeDoubleSolenoid(10, 2);
-  DoubleSolenoid solenoidclimb = m_pH.makeDoubleSolenoid(1, 9);
-  DoubleSolenoid solenoidmiddle = m_pH.makeDoubleSolenoid(0, 8);*/
+  Compressor pcmCompressor = new Compressor(0, PneumaticsModuleType.REVPH);
+  PneumaticHub m_pH = new PneumaticHub();
+  DoubleSolenoid TiltSolenoid = m_pH.makeDoubleSolenoid(14, 3);
+  Solenoid GearSolenoid = m_pH.makeSolenoid(1); //middle solenoid is a single solenoid
+  DoubleSolenoid GripperSolenoid= m_pH.makeDoubleSolenoid(0, 15);
   //public static Solenoid leftDTsolenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
   //public static Solenoid rightDTsolenoid = new Solenoid(PneumaticsModuleType.REVPH, 1);
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
-  @Override
+   @Override
   public void robotInit() {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
@@ -57,11 +57,11 @@ public class Robot extends TimedRobot {
     //operation.setYChannel(1);
     //operation.setXChannel(4);
     lift = new Lift();
-    //Pneumatic solenoids are set below. Three solenoids are set to be in reverse, forward, and forward to begin
+    //Pneumatic solenoids are set below. Three solenoids are set to be in reverse, off, and off to begin
     //pcmCompressor.enableDigital();
-    /*solenoidintake.set(DoubleSolenoid.Value.kReverse);
-    solenoidclimb.set(DoubleSolenoid.Value.kForward);
-    solenoidmiddle.set(DoubleSolenoid.Value.kForward);*/
+    /*Tilt Solenoid.set(DoubleSolenoid.Value.kReverse);
+    GearSolenoid.set(DoubleSolenoid.Value.koff);
+    GripperSolenoid.set(Solenoid.Value.koff);*/
 
   }
 
@@ -155,27 +155,28 @@ public class Robot extends TimedRobot {
     } else {
       winch.winchmotorspeed(0);
     }*/
-    //if the x button is pressed on the operator controller, set the climb solenoid to the reverse position
+
+    //if the x button is pressed on the operator controller, set the tilt solenoid to the reverse position
 /*  if (operation.getRawButton(1)) {
-      solenoidclimb.set(DoubleSolenoid.Value.kReverse);
+      TiltSolenoid.set(DoubleSolenoid.Value.kReverse);
     }
-    //if the A button is pressed on the operator controller, set the climb solenoid to the forward position
+    //if the A button is pressed on the operator controller, set the tilt solenoid to the forward position
     if (operation.getRawButton(2)) {
-      solenoidclimb.set(DoubleSolenoid.Value.kForward);
+      TiltSolenoid.set(DoubleSolenoid.Value.kForward);
     }
-    //if the left bumber button is pressed on the operator controller, set the intake solenoid to forward
+    //if the left bumber button is pressed on the operator controller, set the gear solenoid to forward
     if (operation.getRawButton(5)){
-      solenoidintake.set(DoubleSolenoid.Value.kForward);
+      GearSolenoid.set(Solenoid.Value.kForward);
     }
     else {
-      solenoidintake.set(DoubleSolenoid.Value.kReverse);
+      GearSolenoid.set(DoubleSolenoid.Value.koff);
     }
-    //if the right trigger is pressed on the operator controller, set the middle solenoid to the reverse position
+    //if the right trigger is pressed on the operator controller, set the gripper solenoid to the reverse position
     if (operation.getRawButton(8)){
-      solenoidmiddle.set(DoubleSolenoid.Value.kReverse);
+      GripperSolenoid.set(DoubleSolenoid.Value.kReverse);
 
     }  else {
-      solenoidmiddle.set(DoubleSolenoid.Value.kForward);
+      GripperSolenoid.set(DoubleSolenoid.Value.kForward);
     }
 */
 
