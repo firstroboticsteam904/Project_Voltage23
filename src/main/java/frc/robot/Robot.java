@@ -54,8 +54,8 @@ public class Robot extends TimedRobot {
     drivematrix.setXChannel(4); //initialize the x axis controller on joystick channel 4
     drivetrain = new Drivetrain();
     operation = new Joystick(1); //initialize the operator joystick on port 1
-    //operation.setYChannel(1);
-    //operation.setXChannel(4);
+    operation.setYChannel(1);
+    operation.setXChannel(4);
     lift = new Lift();
     //Pneumatic solenoids are set below. Three solenoids are set to be in reverse, off, and off to begin
     //pcmCompressor.enableDigital();
@@ -131,7 +131,7 @@ public class Robot extends TimedRobot {
 
     drivetrain.arcadeDrive(turnratedeadzone, throttledeadzone);
 
-/*   if(operation.getRawAxis(1) >= 0.5){
+   if(operation.getRawAxis(1) >= 0.5){
       lift.liftspeed(0.5);
     } else if(operation.getRawAxis(1) >= -0.5) {
       lift.liftspeed(-0.5);
