@@ -33,11 +33,11 @@ public class Robot extends TimedRobot {
   public static Lift lift;
   public static Turntable turntable;
   public static Winch winch;
-  Compressor pcmCompressor = new Compressor(0, PneumaticsModuleType.REVPH);
-  PneumaticHub m_pH = new PneumaticHub();
-  DoubleSolenoid TiltSolenoid = m_pH.makeDoubleSolenoid(14, 3);
-  Solenoid GearSolenoid = m_pH.makeSolenoid(1); //middle solenoid is a single solenoid
-  DoubleSolenoid GripperSolenoid= m_pH.makeDoubleSolenoid(0, 15);
+  //Compressor pcmCompressor = new Compressor(0, PneumaticsModuleType.REVPH);
+  //PneumaticHub m_pH = new PneumaticHub();
+  //DoubleSolenoid TiltSolenoid = m_pH.makeDoubleSolenoid(14, 3);
+  //Solenoid GearSolenoid = m_pH.makeSolenoid(1); //middle solenoid is a single solenoid
+  //DoubleSolenoid GripperSolenoid= m_pH.makeDoubleSolenoid(0, 15);
   //public static Solenoid leftDTsolenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
   //public static Solenoid rightDTsolenoid = new Solenoid(PneumaticsModuleType.REVPH, 1);
   /**
@@ -57,6 +57,8 @@ public class Robot extends TimedRobot {
     operation.setYChannel(1);
     operation.setXChannel(4);
     lift = new Lift();
+    turntable = new Turntable();
+    winch = new Winch();
     //Pneumatic solenoids are set below. Three solenoids are set to be in reverse, off, and off to begin
     //pcmCompressor.enableDigital();
     /*Tilt Solenoid.set(DoubleSolenoid.Value.kReverse);
@@ -139,13 +141,13 @@ public class Robot extends TimedRobot {
       lift.liftspeed(0);
     }
 
-    if(operation.getRawAxis(2) >= 0.5){
-      turntable.turntablespeed(0.5);
-    } else if(operation.getRawAxis(4) >= -0.5){
-      turntable.turntablespeed(-0.5);
-    } else{
+    if(operation.getRawButton(1)){ //if x is pressed
+      turntable.turntablespeed(1);
+    } else if(operation.getRawButton(2)){ //if a is pressed
+      turntable.turntablespeed(-1);
+    } else 
       turntable.turntablespeed(0);
-    }
+    
 
      //if the right bumper button is pressed on the operator controller, activate the winch motor
     if(operation.getRawButton(6)){
@@ -154,7 +156,7 @@ public class Robot extends TimedRobot {
       winch.winchmotorspeed(-0.25);
     } else {
       winch.winchmotorspeed(0);
-    }*/
+    }
 
     //if the x button is pressed on the operator controller, set the tilt solenoid to the reverse position
 /*  if (operation.getRawButton(1)) {
