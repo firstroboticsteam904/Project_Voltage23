@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.PneumaticHub;
 
@@ -33,11 +32,11 @@ public class Robot extends TimedRobot {
   public static Lift lift;
   public static Turntable turntable;
   public static Winch winch;
-  //Compressor pcmCompressor = new Compressor(0, PneumaticsModuleType.REVPH);
-  //PneumaticHub m_pH = new PneumaticHub();
-  //DoubleSolenoid TiltSolenoid = m_pH.makeDoubleSolenoid(14, 3);
-  //Solenoid GearSolenoid = m_pH.makeSolenoid(1); //middle solenoid is a single solenoid
-  //DoubleSolenoid GripperSolenoid= m_pH.makeDoubleSolenoid(0, 15);
+  Compressor pcmCompressor = new Compressor(PneumaticsModuleType.REVPH);
+  PneumaticHub m_pH = new PneumaticHub();
+  DoubleSolenoid TiltSolenoid = m_pH.makeDoubleSolenoid(14, 2);
+  Solenoid GearSolenoid = m_pH.makeSolenoid(1); //middle solenoid is a single solenoid
+  DoubleSolenoid GripperSolenoid= m_pH.makeDoubleSolenoid(0, 15);
   //public static Solenoid leftDTsolenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
   //public static Solenoid rightDTsolenoid = new Solenoid(PneumaticsModuleType.REVPH, 1);
   /**
@@ -60,10 +59,11 @@ public class Robot extends TimedRobot {
     turntable = new Turntable();
     winch = new Winch();
     //Pneumatic solenoids are set below. Three solenoids are set to be in reverse, off, and off to begin
-    //pcmCompressor.enableDigital();
-    /*Tilt Solenoid.set(DoubleSolenoid.Value.kReverse);
-    GearSolenoid.set(DoubleSolenoid.Value.koff);
-    GripperSolenoid.set(Solenoid.Value.koff);*/
+    pcmCompressor.enableDigital();
+    //m_pH.enableCompressorDigital();
+    TiltSolenoid.set(DoubleSolenoid.Value.kReverse);
+    GearSolenoid.set(false);
+    GripperSolenoid.set(DoubleSolenoid.Value.kReverse);
 
   }
 
@@ -133,9 +133,9 @@ public class Robot extends TimedRobot {
 
     drivetrain.arcadeDrive(turnratedeadzone, throttledeadzone);
 
-   if(operation.getRawAxis(1) >= 0.5){
+   if(operation.getRawAxis(1) >= 0.25){
       lift.liftspeed(0.5);
-    } else if(operation.getRawAxis(1) >= -0.5) {
+    } else if(operation.getRawAxis(1) >= -0.25) {
       lift.liftspeed(-0.5);
     } else {
       lift.liftspeed(0);
@@ -159,31 +159,36 @@ public class Robot extends TimedRobot {
     }
 
     //if the x button is pressed on the operator controller, set the tilt solenoid to the reverse position
-/*  if (operation.getRawButton(1)) {
+ if (operation.getRawButton(12)) {
       TiltSolenoid.set(DoubleSolenoid.Value.kReverse);
     }
     //if the A button is pressed on the operator controller, set the tilt solenoid to the forward position
-    if (operation.getRawButton(2)) {
+    if (operation.getRawButton(11)) {
       TiltSolenoid.set(DoubleSolenoid.Value.kForward);
     }
-    //if the left bumber button is pressed on the operator controller, set the gear solenoid to forward
-    if (operation.getRawButton(5)){
-      GearSolenoid.set(Solenoid.Value.kForward);
-    }
-    else {
-      GearSolenoid.set(DoubleSolenoid.Value.koff);
-    }
+
     //if the right trigger is pressed on the operator controller, set the gripper solenoid to the reverse position
     if (operation.getRawButton(8)){
-      GripperSolenoid.set(DoubleSolenoid.Value.kReverse);
+      GripperSolenoid.set(DoubleSolenoid.Value.kForward);
 
     }  else {
-      GripperSolenoid.set(DoubleSolenoid.Value.kForward);
+      GripperSolenoid.set(DoubleSolenoid.Value.kReverse);
     }
+
+
+//if the left bumber button is pressed on the operator controller, set the gear solenoid to forward
+    if (drivematrix.getRawButton(5)){ //strong
+      GearSolenoid.set(true);
+      }
+
+  if(drivematrix.getRawButton(6)){ //fast
+    GearSolenoid.set(false);
+  }
+    
+  /*   if {
+      GearSolenoid.set(false);
+      }
 */
-
-
-
 
 
 
