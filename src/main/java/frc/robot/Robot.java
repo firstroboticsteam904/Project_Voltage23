@@ -48,19 +48,18 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
-    drivematrix = new Joystick(0); //initialize the driver joystick on port 1
+    drivematrix = new Joystick(0); //initialize the xbox driver joystick on port 1
     drivematrix.setYChannel(1); //initialize the y axis controller on joystick channel 1
     drivematrix.setXChannel(4); //initialize the x axis controller on joystick channel 4
     drivetrain = new Drivetrain();
-    operation = new Joystick(1); //initialize the operator joystick on port 1
+    operation = new Joystick(1); //initialize the logitech operator joystick on port 1
     operation.setYChannel(1);
     operation.setXChannel(4);
     lift = new Lift();
     turntable = new Turntable();
     winch = new Winch();
-    //Pneumatic solenoids are set below. Three solenoids are set to be in reverse, off, and off to begin
+    //Pneumatic solenoids are set below. Three solenoids are set to be in reverse, off, and reverse to begin
     pcmCompressor.enableDigital();
-    //m_pH.enableCompressorDigital();
     TiltSolenoid.set(DoubleSolenoid.Value.kReverse);
     GearSolenoid.set(false);
     GripperSolenoid.set(DoubleSolenoid.Value.kReverse);
@@ -133,45 +132,47 @@ public class Robot extends TimedRobot {
 
     drivetrain.arcadeDrive(turnratedeadzone, throttledeadzone);
 
-   if(operation.getRawAxis(1) >= 0.25){
+   if(operation.getRawAxis(1) >= 0.25){ //if the left joystick is pushed up raise the lift
       lift.liftspeed(0.5);
-    } else if(operation.getRawAxis(1) >= -0.25) {
+    } else if(operation.getRawAxis(1)>= -0.25 ) {//if the left joystick is pushed down bring the lift back down
       lift.liftspeed(-0.5);
     } else {
       lift.liftspeed(0);
     }
 
-    if(operation.getRawButton(1)){ //if x is pressed
+    if(operation.getRawAxis(2)>= 0.25){ //if right joystick is pushed to the right turn the turn table to the right
       turntable.turntablespeed(1);
-    } else if(operation.getRawButton(2)){ //if a is pressed
+    } else if(operation.getRawAxis(2)>= -0.25){ //if the right joystick is pushed to the left turn the turn table to the left
       turntable.turntablespeed(-1);
     } else 
       turntable.turntablespeed(0);
     
-
+    //winch = extend
      //if the right bumper button is pressed on the operator controller, activate the winch motor
     if(operation.getRawButton(6)){
-      winch.winchmotorspeed(0.25);
-    } else if(operation.getRawButton(7)){ //if the left trigger button is pressed on the operator controller, deactivate the winch controller
+      winch.winchmotorspeed(0.25); // when the right bumper is pressed you want to exstand the arm 
+    } else if(operation.getRawButton(5)){ //if the left bumper button is we want too retract the arm 
       winch.winchmotorspeed(-0.25);
     } else {
       winch.winchmotorspeed(0);
     }
 
-    //if the x button is pressed on the operator controller, set the tilt solenoid to the reverse position
+    //if the _ button is pressed on the operator controller, set the tilt solenoid to the reverse position
  if (operation.getRawButton(12)) {
       TiltSolenoid.set(DoubleSolenoid.Value.kReverse);
     }
-    //if the A button is pressed on the operator controller, set the tilt solenoid to the forward position
-    if (operation.getRawButton(11)) {
+    //if the y button is pressed on the operator controller, tilts the arm up 
+    if (operation.getRawButton(4)) {
       TiltSolenoid.set(DoubleSolenoid.Value.kForward);
+    }else if(operation.getRawButton(2)){// if the a buttom is pressed you want to tilt the gripper 
+        TiltSolenoid.set(DoubleSolenoid.Value.kReverse):
     }
 
-    //if the right trigger is pressed on the operator controller, set the gripper solenoid to the reverse position
-    if (operation.getRawButton(8)){
+    //if the button x  is pressed on the operator controller, we want the gripper to open 
+    if (operation.getRawButton(1)){
       GripperSolenoid.set(DoubleSolenoid.Value.kForward);
 
-    }  else {
+    }  else if(operation.getRawButton(3)) {// if the b button is pressed we want the gripper to close 
       GripperSolenoid.set(DoubleSolenoid.Value.kReverse);
     }
 
