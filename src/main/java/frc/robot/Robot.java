@@ -140,9 +140,9 @@ public class Robot extends TimedRobot {
       lift.liftspeed(0);
     }
 
-    if(operation.getRawAxis(2)>= 0.25){ //if right joystick is pushed to the right turn the turn table to the right
+    if(operation.getRawAxis(2)>= 0.50){ //if right joystick is pushed to the right turn the turn table to the right
       turntable.turntablespeed(1);
-    } else if(operation.getRawAxis(2)>= -0.25){ //if the right joystick is pushed to the left turn the turn table to the left
+    } else if(operation.getRawAxis(2)<= -0.50){ //if the right joystick is pushed to the left turn the turn table to the left
       turntable.turntablespeed(-1);
     } else 
       turntable.turntablespeed(0);
@@ -157,15 +157,12 @@ public class Robot extends TimedRobot {
       winch.winchmotorspeed(0);
     }
 
-    //if the _ button is pressed on the operator controller, set the tilt solenoid to the reverse position
- if (operation.getRawButton(12)) {
-      TiltSolenoid.set(DoubleSolenoid.Value.kReverse);
-    }
+
     //if the y button is pressed on the operator controller, tilts the arm up 
-    if (operation.getRawButton(4)) {
-      TiltSolenoid.set(DoubleSolenoid.Value.kForward);
+    if (operation.getRawButton(4)) { 
+      TiltSolenoid.set(DoubleSolenoid.Value.kReverse);
     }else if(operation.getRawButton(2)){// if the a buttom is pressed you want to tilt the gripper 
-        TiltSolenoid.set(DoubleSolenoid.Value.kReverse):
+        TiltSolenoid.set(DoubleSolenoid.Value.kForward);
     }
 
     //if the button x  is pressed on the operator controller, we want the gripper to open 
