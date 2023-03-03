@@ -119,6 +119,10 @@ public class Robot extends TimedRobot {
     double throttledeadzone;
     double turnratedeadzone;
 
+    //get turntable motor encoder values
+    
+    
+    //get joystick values to drive the robot
     if(Math.abs(drivematrix.getY())>deadzone){
       throttledeadzone = Math.pow(drivematrix.getY(), 3);
     } else{
