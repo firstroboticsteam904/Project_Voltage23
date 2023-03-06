@@ -7,17 +7,26 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
+import edu.wpi.first.wpilibj.smartdashboard.*;
 
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.AbsoluteEncoder;
 public class Lift extends SubsystemBase {
   /** Creates a new Lift. */
  private CANSparkMax liftmotor1 = new CANSparkMax(9, MotorType.kBrushless);
   private MotorControllerGroup liftControllerGroup = new MotorControllerGroup(liftmotor1);
-
+  public RelativeEncoder relliftencoder = liftmotor1.getEncoder();
+  public AbsoluteEncoder Absliftencoder = liftmotor1.getAbsoluteEncoder(Type.kDutyCycle);
   public Lift() {}
 
 public void liftspeed(double speed){
   liftControllerGroup.set(speed);
+  relliftencoder = liftmotor1.getEncoder();
+  Absliftencoder = liftmotor1.getAbsoluteEncoder(Type.kDutyCycle);
+  SmartDashboard.putNumber("relative lift Encoder Position in Units of Revolutions", relliftencoder.getPosition());
+  SmartDashboard.putNumber("absolute lift Encoder Position in Units of Revolutions", Absliftencoder.getPosition()
 } 
 
   @Override

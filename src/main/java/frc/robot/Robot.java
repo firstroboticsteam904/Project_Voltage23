@@ -119,9 +119,6 @@ public class Robot extends TimedRobot {
     double throttledeadzone;
     double turnratedeadzone;
 
-    //get turntable motor encoder values
-    
-    
     //get joystick values to drive the robot
     if(Math.abs(drivematrix.getY())>deadzone){
       throttledeadzone = Math.pow(drivematrix.getY(), 3);
@@ -134,11 +131,11 @@ public class Robot extends TimedRobot {
       turnratedeadzone = 0;
     }
 
-    drivetrain.arcadeDrive(turnratedeadzone, throttledeadzone);
+    drivetrain.arcadeDrive(turnratedeadzone, throttledeadzone); //send joystick inputs to arcadeDrive function in drivetrain class to drive robot
 
    if(operation.getRawAxis(1) >= 0.25){ //if the left joystick is pushed up raise the lift
       lift.liftspeed(0.5);
-    } else if(operation.getRawAxis(1)>= -0.25 ) {//if the left joystick is pushed down bring the lift back down
+    } else if(operation.getRawAxis(1)<= -0.25 ) {//if the left joystick is pushed down bring the lift back down
       lift.liftspeed(-0.5);
     } else {
       lift.liftspeed(0);
