@@ -26,7 +26,7 @@ public void liftspeed(double speed){
   relliftencoder = liftmotor1.getEncoder();
   Absliftencoder = liftmotor1.getAbsoluteEncoder(Type.kDutyCycle);
   SmartDashboard.putNumber("relative lift Encoder Position in Units of Revolutions", relliftencoder.getPosition());
-  SmartDashboard.putNumber("absolute lift Encoder Position in Units of Revolutions", Absliftencoder.getPosition()
+  SmartDashboard.putNumber("absolute lift Encoder Position in Units of Revolutions", Absliftencoder.getPosition());
 } 
 
   @Override

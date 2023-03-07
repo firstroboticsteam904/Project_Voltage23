@@ -32,6 +32,7 @@ public class Robot extends TimedRobot {
   public static Lift lift;
   public static Turntable turntable;
   public static Winch winch;
+  //public static pigeon Pigeon;
   Compressor pcmCompressor = new Compressor(PneumaticsModuleType.REVPH);
   PneumaticHub m_pH = new PneumaticHub();
   DoubleSolenoid TiltSolenoid = m_pH.makeDoubleSolenoid(14, 2);
@@ -58,12 +59,17 @@ public class Robot extends TimedRobot {
     lift = new Lift();
     turntable = new Turntable();
     winch = new Winch();
+    //Pigeon = new pigeon();
     //Pneumatic solenoids are set below. Three solenoids are set to be in reverse, off, and reverse to begin
     pcmCompressor.enableDigital();
     TiltSolenoid.set(DoubleSolenoid.Value.kReverse);
     GearSolenoid.set(false);
     GripperSolenoid.set(DoubleSolenoid.Value.kReverse);
 
+    
+
+    //configure the pigeon
+   // Pigeon.configurePigeon();
   }
 
   /**
@@ -189,7 +195,8 @@ public class Robot extends TimedRobot {
       }
 */
 
-
+//get values from the pigeon
+//Pigeon.getPigeonValues();
 
 
 
