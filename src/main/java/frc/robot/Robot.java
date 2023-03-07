@@ -13,7 +13,11 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.PneumaticHub;
-
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Timer;
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -44,6 +48,17 @@ public class Robot extends TimedRobot {
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
+
+
+   public static Timer ticktick = new Timer();
+   public static Timer tocktock = new Timer();
+   public static limelight distance;
+   public static NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+   public static NetworkTableEntry ty = table.getEntry("ty");
+
+   PIDController VisionPIDController = new PIDController(0.045, 0.065, 0.0065);
+   
+
    @Override
   public void robotInit() {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
@@ -66,7 +81,9 @@ public class Robot extends TimedRobot {
     GearSolenoid.set(false);
     GripperSolenoid.set(DoubleSolenoid.Value.kReverse);
 
-    
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1);
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
+
 
     //configure the pigeon
    // Pigeon.configurePigeon();
@@ -197,10 +214,34 @@ public class Robot extends TimedRobot {
 
 //get values from the pigeon
 //Pigeon.getPigeonValues();
+final double targetOffsetAngle_Vertical = ty.getDouble(0.0);
+    final double limelightmountangledegrees = 13.490;
+    final double limelightheightinches = 41.75;
+    final double goalHeightInches = 104;
+    final double angletogoaldegrees = limelightmountangledegrees + targetOffsetAngle_Vertical;
+    final double angletogoalradians = angletogoaldegrees * (3.14159 / 180.0);
+    final double distanceFromLimelightToGoalInches = (goalHeightInches - limelightheightinches)/Math.tan(angletogoalradians);
 
+    if(drivematrix.getRawButton(5)){//if the left bumper is pressed tell the robot to find the target
 
+      NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
+      NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0);
+    
+      double tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(2);
+      double ty = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
+      NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
+      NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0);
+      SmartDashboard.putNumber("LimelightTX", tx);
+      SmartDashboard.putNumber("LimelightTY", ty);
+      double LimeCont = VisionPIDController.calculate(0, tx);
+      //drivetrain.arcadeDrive(LimeCont, throttledeadzone);
+      SmartDashboard.putNumber("LimeCont", LimeCont);
+      SmartDashboard.putNumber("Distance", distanceFromLimelightToGoalInches);
 
   }
+}
+
+  // later work - write code to place game object
 
   /** This function is called once when the robot is disabled. */
   @Override

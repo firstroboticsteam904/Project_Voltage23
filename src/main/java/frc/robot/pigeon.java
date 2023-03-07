@@ -3,28 +3,18 @@
 // the WPILib BSD license file in the root directory of this project.
 
 /*package frc.robot;
-import com.ctre.phoenix.sensors.Pigeon2;
-import com.ctre.phoenix.sensors.Pigeon2Configuration;
-import com.ctre.phoenix.sensors.WPI_Pigeon2;
+import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-/** Add your docs here.
- * 
+//* Add your docs here.
+ 
 public class pigeon {
-private Pigeon2 m_pigeon;
-private WPI_Pigeon2 m_pigeon_wpi;
 //initializing the pigeon on can bus __
-    //m_pigeon = new Pigeon2(_);
-
+WPI_PigeonIMU m_pigeon = new WPI_PigeonIMU(15); //pigeon on CAN device ID 15
+public static Drivetrain drivetrain;
 public void configurePigeon(){
     System.out.println("Current pigeon firmware ver: " + m_pigeon.getFirmwareVersion());
     m_pigeon.configFactoryDefault();
-    m_pigeon.clearStickyFaults();
-    final Pigeon2Configuration pigeonConfig = new Pigeon2Configuration();
-    pigeonConfig.EnableCompass = true;
-    pigeonConfig.MountPosePitch = 0;
-    pigeonConfig.MountPoseRoll = 0;
-    pigeonConfig.MountPoseYaw = 0;
-    m_pigeon.configAllSettings(pigeonConfig);   
+    m_pigeon.clearStickyFaults();   
 }
 
 public void getPigeonValues(){
@@ -47,15 +37,18 @@ public void getPigeonValues(){
     //close gripper
 
     //initialize PID variables
+    double kP = 1; //proportinal constant
+    double kD = 1; //derivative constant
 
     //get pigeon values
 
     //call drivetrain function arcade drive
 
     //using PID, driving train, and pigeon values, adjust position on balance beam 
-
+    double error = -m_pigeon.getRate(); //returns the rate of rotation of the pigeon sensor given in degrees/second
+    drivetrain.arcadeDrive((0.5+(kP*error)+(kD*error)),0);
   }
   
-}
+}*/
 
-*/
+
