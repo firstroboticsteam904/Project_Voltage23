@@ -18,16 +18,22 @@ public class Lift extends SubsystemBase {
  public CANSparkMax liftmotor1 = new CANSparkMax(9, MotorType.kBrushless);
   private MotorControllerGroup liftControllerGroup = new MotorControllerGroup(liftmotor1);
   public RelativeEncoder relliftencoder = liftmotor1.getEncoder();
-  public AbsoluteEncoder Absliftencoder = liftmotor1.getAbsoluteEncoder(Type.kDutyCycle);
+  //public AbsoluteEncoder Absliftencoder = liftmotor1.getAbsoluteEncoder(Type.kDutyCycle);
   public Lift() {}
 
 public void liftspeed(double speed){
   liftControllerGroup.set(speed);
   relliftencoder = liftmotor1.getEncoder();
-  Absliftencoder = liftmotor1.getAbsoluteEncoder(Type.kDutyCycle);
+  //Absliftencoder = liftmotor1.getAbsoluteEncoder(Type.kDutyCycle);
   SmartDashboard.putNumber("relative lift Encoder Position in Units of Revolutions", relliftencoder.getPosition());
-  SmartDashboard.putNumber("absolute lift Encoder Position in Units of Revolutions", Absliftencoder.getPosition());
+  //SmartDashboard.putNumber("absolute lift Encoder Position in Units of Revolutions", Absliftencoder.getPosition());
 } 
+
+public double lifttravel(){
+  double liftticks = relliftencoder.getPosition();
+
+  return liftticks;
+}
 
   @Override
   public void periodic() {

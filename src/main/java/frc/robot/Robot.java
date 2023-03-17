@@ -8,7 +8,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Auto.DriveAuto;
-import frc.robot.Auto.driveback;
+import frc.robot.Auto.AutoSelections.advancedAuto;
+import frc.robot.Auto.AutoSelections.driveback;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -43,13 +44,14 @@ public class Robot extends TimedRobot {
   public static Turntable turntable;
   public static Winch winch;
   //public driveback driveback;
-  public Command driveback;
+  public driveback driveback;
+  public advancedAuto advancedAuto;
   //public static pigeon Pigeon;
   Compressor pcmCompressor = new Compressor(PneumaticsModuleType.REVPH);
-  PneumaticHub m_pH = new PneumaticHub();
-  DoubleSolenoid TiltSolenoid = m_pH.makeDoubleSolenoid(14, 2);
+  static PneumaticHub m_pH = new PneumaticHub();
+  public static DoubleSolenoid TiltSolenoid = m_pH.makeDoubleSolenoid(14, 2);
   Solenoid GearSolenoid = m_pH.makeSolenoid(1); //middle solenoid is a single solenoid
-  DoubleSolenoid GripperSolenoid= m_pH.makeDoubleSolenoid(0, 15);
+  public static DoubleSolenoid GripperSolenoid= m_pH.makeDoubleSolenoid(0, 15);
   //public static Solenoid leftDTsolenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
   //public static Solenoid rightDTsolenoid = new Solenoid(PneumaticsModuleType.REVPH, 1);
   /**
@@ -70,7 +72,8 @@ public class Robot extends TimedRobot {
    @Override
   public void robotInit() {
     SmartDashboard.putData("Auto choices", m_chooser);
-    m_chooser.setDefaultOption("Default Auto", driveback);
+    m_chooser.setDefaultOption("driveback", driveback);
+    m_chooser.addOption("advancedAuto", advancedAuto);
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1);
     drivematrix = new Joystick(0); //initialize the xbox driver joystick on port 1
     drivematrix.setYChannel(1); //initialize the y axis controller on joystick channel 1
@@ -106,8 +109,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-//CommandScheduler.getInstance().run();
-
+    //CommandScheduler.getInstance().run();
   }
 
   /**
@@ -122,8 +124,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    CommandScheduler.getInstance().run();
     /*m_autoSelected = m_chooser.getSelected();
-    //m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
+    m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
 
     switch (m_autoSelected) {
@@ -134,7 +137,7 @@ public class Robot extends TimedRobot {
       default:
         // Put default auto code here
         break;
-    }*/
+    }
 
     super.autonomousInit();
     if(autonomousCommand != null){
@@ -143,14 +146,14 @@ public class Robot extends TimedRobot {
 
     autonomousCommand = m_chooser.getSelected();
     autonomousCommand.execute();
-
+*/
   }
   
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    CommandScheduler.getInstance().run();
+    
   }
 
   /** This function is called once when teleop is enabled. */

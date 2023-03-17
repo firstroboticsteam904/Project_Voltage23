@@ -18,7 +18,7 @@ public class Turntable extends SubsystemBase {
 
   public CANSparkMax turntablemotor1 = new CANSparkMax(10, MotorType.kBrushless);
   public RelativeEncoder turntable_Encoder = turntablemotor1.getEncoder();
-  public AbsoluteEncoder turnAbs_Encoder = turntablemotor1.getAbsoluteEncoder(Type.kDutyCycle);
+  //public AbsoluteEncoder turnAbs_Encoder = turntablemotor1.getAbsoluteEncoder(Type.kDutyCycle);
 
   public Turntable() {}
 
@@ -29,13 +29,17 @@ public class Turntable extends SubsystemBase {
     turntablemotor1.set(speed); //set the turntable speed
     //get encoder value from turns
     turntable_Encoder = turntablemotor1.getEncoder();
-    turnAbs_Encoder = turntablemotor1.getAbsoluteEncoder(Type.kDutyCycle);
+    //turnAbs_Encoder = turntablemotor1.getAbsoluteEncoder(Type.kDutyCycle);
     //turntable_Encoder.setPositionConversionFactor(12,852); //scale factor for 
     SmartDashboard.putNumber("relative turntable Encoder Position in Units of Revolutions", turntable_Encoder.getPosition());
-    SmartDashboard.putNumber("absolute turntable Encoder Position in Units of Revolutions", turnAbs_Encoder.getPosition());
+    //SmartDashboard.putNumber("absolute turntable Encoder Position in Units of Revolutions", turnAbs_Encoder.getPosition());
   }
 
-  
+  public double tabletravel(){
+    double tableticks = turntable_Encoder.getPosition();
+
+    return tableticks;
+  }
 
   //get the encoder values from the SparkMax motors
   
