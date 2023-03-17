@@ -7,9 +7,9 @@ import frc.robot.Robot;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class TiltAuto extends CommandBase {
+public class TiltUpAuto extends CommandBase {
   /** Creates a new TiltAuto. */
-  public TiltAuto() {
+  public TiltUpAuto() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -34,6 +34,6 @@ public class TiltAuto extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }
