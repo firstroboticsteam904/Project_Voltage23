@@ -15,6 +15,6 @@ public class driveback extends SequentialCommandGroup {
   /** Creates a new driveback. */
   public driveback() {
     // Add your commands in the addCommands() call, e.g.
-   addCommands(new DriveAuto(1));
+   addCommands(new DriveAuto(0.4));
   }
 }
