@@ -16,10 +16,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class DriveAuto extends CommandBase {
   /** Creates a new DriveAuto. */
-  double disireddistance;
-  public DriveAuto(double distance) {
+  private double desiredDistance;
+
+  public DriveAuto(double driveDistance) {
     // Use addRequirements() here to declare subsystem dependencies.
-    double disireddistance = distance;
+    super();
+    desiredDistance = driveDistance;
   }
 
   // Called when the command is initially scheduled.
@@ -34,20 +36,29 @@ public class DriveAuto extends CommandBase {
   @Override
   public void execute() {
     double robovroom = Robot.drivetrain.getdistancetravled();
-    if(robovroom < disireddistance){
-      Robot.drivetrain.arcadeDrive(0.25, 0);
-    } else {
-      Robot.drivetrain.arcadeDrive(0, 0);
+    if (robovroom < desiredDistance) {
+      Robot.drivetrain.arcadeDrive(0, 0.25);
+      SmartDashboard.putString("reading auto?", "yes");
     }
+    // // } else {
+    // Robot.drivetrain.arcadeDrive(0, 0);
+    // }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Robot.drivetrain.getdistancetravled() > disireddistance;
+    if (Robot.drivetrain.getdistancetravled() > desiredDistance) {
+      Robot.drivetrain.arcadeDrive(0, 0);
+      return true;
+    } else {
+      return false;
+    }
+
   }
 }

@@ -45,10 +45,10 @@ public class Drivetrain extends SubsystemBase {
 
 
   public double getdistancetravled(){
-    double realencoderticks = drivetrainencoder_right.getPosition();
+    double realencoderticks = -drivetrainencoder_right.getPosition();
 
     double inches = realencoderticks * 0.004601;
-
+    SmartDashboard.putNumber("Inches", inches);
     return inches;
   }
 

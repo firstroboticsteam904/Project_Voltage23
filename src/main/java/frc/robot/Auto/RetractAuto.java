@@ -26,7 +26,7 @@ double disiredwinchticks;
   @Override
   public void execute() {
     double winchspin = Robot.winch.winchtravel();
-    if(winchspin <= disiredwinchticks){
+    if(winchspin >= disiredwinchticks){
       Robot.winch.winchmotorspeed(-0.25);
     } else {
       Robot.winch.winchmotorspeed(0);
@@ -40,6 +40,6 @@ double disiredwinchticks;
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Robot.winch.winchtravel() >= disiredwinchticks;
+    return Robot.winch.winchtravel() <= disiredwinchticks;
   }
 }
