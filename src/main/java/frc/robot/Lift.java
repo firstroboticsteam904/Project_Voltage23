@@ -15,7 +15,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.AbsoluteEncoder;
 public class Lift extends SubsystemBase {
   /** Creates a new Lift. */
- private CANSparkMax liftmotor1 = new CANSparkMax(9, MotorType.kBrushless);
+ public CANSparkMax liftmotor1 = new CANSparkMax(9, MotorType.kBrushless);
   private MotorControllerGroup liftControllerGroup = new MotorControllerGroup(liftmotor1);
   public RelativeEncoder relliftencoder = liftmotor1.getEncoder();
   public AbsoluteEncoder Absliftencoder = liftmotor1.getAbsoluteEncoder(Type.kDutyCycle);

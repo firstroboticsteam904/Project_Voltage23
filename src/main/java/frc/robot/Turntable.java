@@ -24,10 +24,13 @@ public class Turntable extends SubsystemBase {
 
   //set the speed on the turntable
   public void turntablespeed(double speed){
-  turntablemotor1.set(speed); //set the turntable speed
+    //Check that the turntable is not beyond bounds
+
+    turntablemotor1.set(speed); //set the turntable speed
     //get encoder value from turns
     turntable_Encoder = turntablemotor1.getEncoder();
     turnAbs_Encoder = turntablemotor1.getAbsoluteEncoder(Type.kDutyCycle);
+    //turntable_Encoder.setPositionConversionFactor(12,852); //scale factor for 
     SmartDashboard.putNumber("relative turntable Encoder Position in Units of Revolutions", turntable_Encoder.getPosition());
     SmartDashboard.putNumber("absolute turntable Encoder Position in Units of Revolutions", turnAbs_Encoder.getPosition());
   }

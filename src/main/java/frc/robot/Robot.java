@@ -7,6 +7,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Auto.DriveAuto;
+import frc.robot.Auto.driveback;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -18,17 +20,21 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
+
 public class Robot extends TimedRobot {
-  private static final String kDefaultAuto = "Default";
-  private static final String kCustomAuto = "My Auto";
+  //private static final String kDefaultAuto = "Default";
+  private Command autonomousCommand;
   private String m_autoSelected;
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  private final SendableChooser<Command> m_chooser = new SendableChooser<>();
   private Joystick drivematrix; // driver joystick
   private Joystick operation;  
   public static Drivetrain drivetrain;
@@ -36,6 +42,8 @@ public class Robot extends TimedRobot {
   public static Lift lift;
   public static Turntable turntable;
   public static Winch winch;
+  //public driveback driveback;
+  public Command driveback;
   //public static pigeon Pigeon;
   Compressor pcmCompressor = new Compressor(PneumaticsModuleType.REVPH);
   PneumaticHub m_pH = new PneumaticHub();
@@ -61,25 +69,25 @@ public class Robot extends TimedRobot {
 
    @Override
   public void robotInit() {
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+    m_chooser.setDefaultOption("Default Auto", driveback);
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1);
     drivematrix = new Joystick(0); //initialize the xbox driver joystick on port 1
     drivematrix.setYChannel(1); //initialize the y axis controller on joystick channel 1
-    drivematrix.setXChannel(4); //initialize the x axis controller on joystick channel 4
+    drivematrix.setXChannel(4); //initialize the x axis controller on joystick channel 3
     drivetrain = new Drivetrain();
     operation = new Joystick(1); //initialize the logitech operator joystick on port 1
     operation.setYChannel(1);
-    operation.setXChannel(4);
+    operation.setXChannel(2);
     lift = new Lift();
     turntable = new Turntable();
     winch = new Winch();
     //Pigeon = new pigeon();
     //Pneumatic solenoids are set below. Three solenoids are set to be in reverse, off, and reverse to begin
     pcmCompressor.enableDigital();
-    TiltSolenoid.set(DoubleSolenoid.Value.kReverse);
+    TiltSolenoid.set(DoubleSolenoid.Value.kForward);
     GearSolenoid.set(false);
-    GripperSolenoid.set(DoubleSolenoid.Value.kReverse);
+    GripperSolenoid.set(DoubleSolenoid.Value.kForward);
 
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1);
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
@@ -97,7 +105,10 @@ public class Robot extends TimedRobot {
    * SmartDashboard integrated updating.
    */
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() {
+//CommandScheduler.getInstance().run();
+
+  }
 
   /**
    * This autonomous (along with the chooser code above) shows how to select between different
@@ -111,23 +122,35 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autoSelected = m_chooser.getSelected();
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
+    /*m_autoSelected = m_chooser.getSelected();
+    //m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
-  }
 
-  /** This function is called periodically during autonomous. */
-  @Override
-  public void autonomousPeriodic() {
     switch (m_autoSelected) {
       case kCustomAuto:
         // Put custom auto code here
         break;
-      case kDefaultAuto:
+      case driveback:
       default:
         // Put default auto code here
         break;
+    }*/
+
+    super.autonomousInit();
+    if(autonomousCommand != null){
+      autonomousCommand.cancel();
     }
+
+    autonomousCommand = m_chooser.getSelected();
+    autonomousCommand.execute();
+
+  }
+  
+
+  /** This function is called periodically during autonomous. */
+  @Override
+  public void autonomousPeriodic() {
+    CommandScheduler.getInstance().run();
   }
 
   /** This function is called once when teleop is enabled. */
@@ -141,6 +164,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     double throttledeadzone;
     double turnratedeadzone;
+
 
     //get joystick values to drive the robot
     if(Math.abs(drivematrix.getY())>deadzone){
@@ -156,18 +180,35 @@ public class Robot extends TimedRobot {
 
     drivetrain.arcadeDrive(turnratedeadzone, throttledeadzone); //send joystick inputs to arcadeDrive function in drivetrain class to drive robot
 
-   if(operation.getRawAxis(1) >= 0.25){ //if the left joystick is pushed up raise the lift
-      lift.liftspeed(0.5);
+/*   if(Math.abs(operation.getRawAxis(1))>deadzone){
+      lift.liftspeed(Math.pow(operation.getY(), 3));
+    } else {
+      lift.liftspeed(0);
+    }
+ 
+    if(Math.abs(operation.getX())>deadzone){
+      turntable.turntablespeed(Math.pow(operation.getX(), 3));
+    } else if(drivematrix.getRawButtonPressed(1)){
+
+    }
+    
+    else {
+      turntable.turntablespeed(0);
+    }
+*/
+
+  if(operation.getRawAxis(1) >= 0.25){ //if the left joystick is pushed up raise the lift
+      lift.liftspeed(0.4);
     } else if(operation.getRawAxis(1)<= -0.25 ) {//if the left joystick is pushed down bring the lift back down
-      lift.liftspeed(-0.5);
+      lift.liftspeed(-0.4);
     } else {
       lift.liftspeed(0);
     }
 
     if(operation.getRawAxis(2)>= 0.50){ //if right joystick is pushed to the right turn the turn table to the right
-      turntable.turntablespeed(1);
+      turntable.turntablespeed(-0.4);
     } else if(operation.getRawAxis(2)<= -0.50){ //if the right joystick is pushed to the left turn the turn table to the left
-      turntable.turntablespeed(-1);
+      turntable.turntablespeed(0.4);
     } else 
       turntable.turntablespeed(0);
     
@@ -215,14 +256,9 @@ public class Robot extends TimedRobot {
 //get values from the pigeon
 //Pigeon.getPigeonValues();
 final double targetOffsetAngle_Vertical = ty.getDouble(0.0);
-    final double limelightmountangledegrees = 13.490;
-    final double limelightheightinches = 41.75;
-    final double goalHeightInches = 104;
-    final double angletogoaldegrees = limelightmountangledegrees + targetOffsetAngle_Vertical;
-    final double angletogoalradians = angletogoaldegrees * (3.14159 / 180.0);
-    final double distanceFromLimelightToGoalInches = (goalHeightInches - limelightheightinches)/Math.tan(angletogoalradians);
 
-    if(drivematrix.getRawButton(5)){//if the left bumper is pressed tell the robot to find the target
+
+    if(drivematrix.getRawButton(10)){//if the left bumper is pressed tell the robot to find the target
 
       NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
       NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0);
@@ -236,7 +272,7 @@ final double targetOffsetAngle_Vertical = ty.getDouble(0.0);
       double LimeCont = VisionPIDController.calculate(0, tx);
       //drivetrain.arcadeDrive(LimeCont, throttledeadzone);
       SmartDashboard.putNumber("LimeCont", LimeCont);
-      SmartDashboard.putNumber("Distance", distanceFromLimelightToGoalInches);
+
 
   }
 }
