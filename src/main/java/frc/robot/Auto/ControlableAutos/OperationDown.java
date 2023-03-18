@@ -18,7 +18,7 @@ public class OperationDown extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new TiltDownAuto(),
-      new LiftDownAuto(5)
+      new LiftDownAuto(1)
 
     );
   }

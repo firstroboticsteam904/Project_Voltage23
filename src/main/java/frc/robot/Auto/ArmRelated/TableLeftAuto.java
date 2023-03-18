@@ -27,7 +27,7 @@ public class TableLeftAuto extends CommandBase {
   public void execute() {
     double tableturn = Robot.turntable.tabletravel();
     if(tableturn <= disiredtableticks){
-      Robot.turntable.turntablespeed(0.40);
+      Robot.turntable.turntablespeed(0.50);
     }
   }
 

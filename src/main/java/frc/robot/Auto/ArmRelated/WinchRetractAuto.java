@@ -27,7 +27,7 @@ double disiredwinchticks;
   public void execute() {
     double winchspin = Robot.winch.winchtravel();
     if(winchspin >= disiredwinchticks){
-      Robot.winch.winchmotorspeed(-0.25);
+      Robot.winch.winchmotorspeed(-0.70);
     } else {
       Robot.winch.winchmotorspeed(0);
     }
