@@ -5,17 +5,17 @@
 package frc.robot.Auto;
 
 import frc.robot.Robot;
-import frc.robot.Winch;
+import frc.robot.Turntable;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class RetractAuto extends CommandBase {
-  /** Creates a new WinchAuto. */
+public class TableLeftAuto extends CommandBase {
+  /** Creates a new TableAuto. */
 
-double disiredwinchticks;
+ double disiredtableticks;
 
-  public RetractAuto(double winchautoticks) {
+  public TableLeftAuto(double tableautoticks) {
     // Use addRequirements() here to declare subsystem dependencies.
-    double disiredwinchticks = winchautoticks;
+    disiredtableticks = tableautoticks;
   }
 
   // Called when the command is initially scheduled.
@@ -25,11 +25,9 @@ double disiredwinchticks;
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double winchspin = Robot.winch.winchtravel();
-    if(winchspin >= disiredwinchticks){
-      Robot.winch.winchmotorspeed(-0.25);
-    } else {
-      Robot.winch.winchmotorspeed(0);
+    double tableturn = Robot.turntable.tabletravel();
+    if(tableturn >= disiredtableticks){
+      Robot.turntable.turntablespeed(-0.40);
     }
   }
 
@@ -40,6 +38,11 @@ double disiredwinchticks;
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Robot.winch.winchtravel() <= disiredwinchticks;
+    if(Robot.turntable.tabletravel() <= disiredtableticks){
+      Robot.turntable.turntablespeed(0);
+      return true;
+    } else {
+      return false;
+    }
   }
 }

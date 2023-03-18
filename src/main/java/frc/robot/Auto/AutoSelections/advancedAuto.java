@@ -6,12 +6,12 @@ package frc.robot.Auto.AutoSelections;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Auto.DriveAuto;
-import frc.robot.Auto.ExtendAuto;
-import frc.robot.Auto.GrippersAuto;
-import frc.robot.Auto.LiftAuto;
-import frc.robot.Auto.RetractAuto;
-import frc.robot.Auto.TableAuto;
-import frc.robot.Auto.TiltUpAuto;
+import frc.robot.Auto.TableRightAuto;
+import frc.robot.Auto.ArmRelated.ExtendAuto;
+import frc.robot.Auto.ArmRelated.GrippersOpenAuto;
+import frc.robot.Auto.ArmRelated.LiftUpAuto;
+import frc.robot.Auto.ArmRelated.RetractAuto;
+import frc.robot.Auto.ArmRelated.TiltUpAuto;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -22,11 +22,11 @@ public class advancedAuto extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-    new TableAuto(27), 
-    new LiftAuto(80), 
+    new TableRightAuto(27), 
+    new LiftUpAuto(80), 
     new ExtendAuto(25), 
     new TiltUpAuto(), 
-    new GrippersAuto(),
+    new GrippersOpenAuto(),
     new RetractAuto(3),
     new DriveAuto(60)
     );

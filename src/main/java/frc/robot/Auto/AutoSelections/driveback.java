@@ -4,9 +4,8 @@
 
 package frc.robot.Auto.AutoSelections;
 
-import frc.robot.Auto.DriveAuto;
-
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Auto.DriveAuto;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:

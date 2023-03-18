@@ -2,21 +2,22 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.Auto;
+package frc.robot.Auto.ArmRelated;
 
 import frc.robot.Lift;
 import frc.robot.Robot;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class LiftAuto extends CommandBase {
+public class LiftUpAuto extends CommandBase {
   /** Creates a new LiftAuto. */
 
   double disiredliftticks;
 
-  public LiftAuto(double liftautoticks) {
+  public LiftUpAuto(double liftautoticks) {
     // Use addRequirements() here to declare subsystem dependencies.
     disiredliftticks = liftautoticks;
   }
+
 
   // Called when the command is initially scheduled.
   @Override

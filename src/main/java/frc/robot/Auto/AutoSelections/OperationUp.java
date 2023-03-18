@@ -5,20 +5,22 @@
 package frc.robot.Auto.AutoSelections;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.robot.Auto.LiftAuto;
-import frc.robot.Auto.TiltUpAuto;
+import frc.robot.Auto.ArmRelated.LiftUpAuto;
+import frc.robot.Auto.ArmRelated.TiltUpAuto;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class OperationUp extends ParallelCommandGroup {
+public class OperationUp extends SequentialCommandGroup {
   /** Creates a new OperationUp. */
   public OperationUp() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new LiftAuto(80),
-      new TiltUpAuto()
+      new TiltUpAuto(),
+      new LiftUpAuto(-29)
+
     );
   }
 }
