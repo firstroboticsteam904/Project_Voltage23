@@ -4,8 +4,8 @@
 
 package frc.robot.Auto.ArmRelated;
 
-import frc.robot.Lift;
 import frc.robot.Robot;
+import frc.robot.Subsystems.Lift;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class LiftDownAuto extends CommandBase {

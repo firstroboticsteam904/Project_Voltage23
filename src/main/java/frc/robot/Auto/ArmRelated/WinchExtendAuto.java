@@ -5,15 +5,15 @@
 package frc.robot.Auto.ArmRelated;
 
 import frc.robot.Robot;
-import frc.robot.Winch;
+import frc.robot.Subsystems.Winch;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class RetractAuto extends CommandBase {
+public class WinchExtendAuto extends CommandBase {
   /** Creates a new WinchAuto. */
 
 double disiredwinchticks;
 
-  public RetractAuto(double winchautoticks) {
+  public WinchExtendAuto(double winchautoticks) {
     // Use addRequirements() here to declare subsystem dependencies.
     double disiredwinchticks = winchautoticks;
   }
@@ -26,8 +26,8 @@ double disiredwinchticks;
   @Override
   public void execute() {
     double winchspin = Robot.winch.winchtravel();
-    if(winchspin >= disiredwinchticks){
-      Robot.winch.winchmotorspeed(-0.25);
+    if(winchspin <= disiredwinchticks){
+      Robot.winch.winchmotorspeed(0.25);
     } else {
       Robot.winch.winchmotorspeed(0);
     }
@@ -40,6 +40,6 @@ double disiredwinchticks;
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Robot.winch.winchtravel() <= disiredwinchticks;
+    return Robot.winch.winchtravel() >= disiredwinchticks;
   }
 }

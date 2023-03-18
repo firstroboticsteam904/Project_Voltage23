@@ -2,21 +2,20 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.Auto.ControlableAutos;
+package frc.robot.Auto.ArmRelated;
 
-import frc.robot.Lift;
 import frc.robot.Robot;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import frc.robot.Subsystems.Winch;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class OperationUpAuto extends CommandBase {
-  /** Creates a new LiftAuto. */
+public class WinchRetractAuto extends CommandBase {
+  /** Creates a new WinchAuto. */
 
-  double disiredliftticks;
+double disiredwinchticks;
 
-  public OperationUpAuto(double liftautoticks) {
+  public WinchRetractAuto(double winchautoticks) {
     // Use addRequirements() here to declare subsystem dependencies.
-    double disiredliftticks = liftautoticks;
+    double disiredwinchticks = winchautoticks;
   }
 
   // Called when the command is initially scheduled.
@@ -26,15 +25,12 @@ public class OperationUpAuto extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double liftgo = Robot.lift.lifttravel();
-    if(liftgo <= disiredliftticks){
-      Robot.lift.liftspeed(0.40);
+    double winchspin = Robot.winch.winchtravel();
+    if(winchspin >= disiredwinchticks){
+      Robot.winch.winchmotorspeed(-0.25);
     } else {
-      Robot.lift.liftspeed(0);
+      Robot.winch.winchmotorspeed(0);
     }
-
-    Robot.GripperSolenoid.set(Value.kForward);
-
   }
 
   // Called once the command ends or is interrupted.
@@ -44,6 +40,6 @@ public class OperationUpAuto extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Robot.lift.lifttravel() >= disiredliftticks;
+    return Robot.winch.winchtravel() <= disiredwinchticks;
   }
 }

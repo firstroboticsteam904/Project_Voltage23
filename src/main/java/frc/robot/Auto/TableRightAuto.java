@@ -5,7 +5,7 @@
 package frc.robot.Auto;
 
 import frc.robot.Robot;
-import frc.robot.Turntable;
+import frc.robot.Subsystems.Turntable;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class TableRightAuto extends CommandBase {

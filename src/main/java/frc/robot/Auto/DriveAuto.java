@@ -4,8 +4,8 @@
 
 package frc.robot.Auto;
 
-import frc.robot.Drivetrain;
 import frc.robot.Robot;
+import frc.robot.Subsystems.Drivetrain;
 
 import javax.naming.spi.DirStateFactory;
 
