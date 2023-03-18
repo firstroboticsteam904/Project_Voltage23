@@ -5,7 +5,12 @@
 package frc.robot.Auto.AutoSelections;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.Auto.DriveAuto;
 import frc.robot.Auto.GrippersAuto;
+import frc.robot.Auto.LiftAuto;
+import frc.robot.Auto.TableAuto;
 import frc.robot.Auto.TiltUpAuto;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -16,6 +21,6 @@ public class SixPointAuto extends SequentialCommandGroup {
   public SixPointAuto() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new TiltUpAuto(), new GrippersAuto(), new driveback());
+    addCommands(new LiftAuto(-29), new TableAuto(-38), new TiltUpAuto(), new GrippersAuto(), new WaitCommand(2), new DriveAuto(0.32));
   }
 }

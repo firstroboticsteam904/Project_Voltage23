@@ -15,7 +15,7 @@ public class TableAuto extends CommandBase {
 
   public TableAuto(double tableautoticks) {
     // Use addRequirements() here to declare subsystem dependencies.
-    double disiredtableticks = tableautoticks;
+    disiredtableticks = tableautoticks;
   }
 
   // Called when the command is initially scheduled.
@@ -26,10 +26,8 @@ public class TableAuto extends CommandBase {
   @Override
   public void execute() {
     double tableturn = Robot.turntable.tabletravel();
-    if(tableturn <= disiredtableticks){
-      Robot.turntable.turntablespeed(0.40);
-    } else{
-      Robot.turntable.turntablespeed(0);
+    if(tableturn >= disiredtableticks){
+      Robot.turntable.turntablespeed(-0.40);
     }
   }
 
@@ -40,6 +38,11 @@ public class TableAuto extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Robot.turntable.tabletravel() >= disiredtableticks;
+    if(Robot.turntable.tabletravel() <= disiredtableticks){
+      Robot.turntable.turntablespeed(0);
+      return true;
+    } else {
+      return false;
+    }
   }
 }

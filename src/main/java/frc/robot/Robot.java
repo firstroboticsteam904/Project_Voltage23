@@ -52,6 +52,7 @@ public class Robot extends TimedRobot {
   public static Winch winch;
   public static final String driveback = "test";
   public static final String advancedAuto = "test2";
+  public static final String SixPointAuto = "test3";
   // public static pigeon Pigeon;
   Compressor pcmCompressor = new Compressor(PneumaticsModuleType.REVPH);
   static PneumaticHub m_pH = new PneumaticHub();
@@ -79,9 +80,11 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    SmartDashboard.putData("Auto choices", m_chooser);
-    m_chooser.setDefaultOption("driveback", driveback);
+
+    m_chooser.setDefaultOption("SixPointAuto", SixPointAuto);
     m_chooser.addOption("advancedAuto", advancedAuto);
+    m_chooser.addOption("driveback", driveback);
+    SmartDashboard.putData("Auto choices", m_chooser);
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1);
     drivematrix = new Joystick(0); // initialize the xbox driver joystick on port 1
     drivematrix.setYChannel(1); // initialize the y axis controller on joystick channel 1
@@ -142,13 +145,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    SmartDashboard.putString("reading auto?", "yes");
+    //SmartDashboard.putString("reading auto?", "yes");
     // CommandScheduler.getInstance().run();
     m_autoSelected = m_chooser.getSelected();
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     // System.out.println("Auto selected: " + m_autoSelected);
     Command driveBack = new driveback();
     Command driveAuto2 = new DriveAuto(60);
+    Command sixpoints = new frc.robot.Auto.AutoSelections.SixPointAuto();
     switch (m_autoSelected) {
       case advancedAuto:
         CommandScheduler.getInstance().schedule(new WaitCommand(.5));
@@ -156,6 +160,10 @@ public class Robot extends TimedRobot {
       case driveback:
       default:
         CommandScheduler.getInstance().schedule(driveBack);
+
+        break;
+      case SixPointAuto:
+      CommandScheduler.getInstance().schedule(sixpoints);
 
         break;
     }
@@ -315,11 +323,11 @@ public class Robot extends TimedRobot {
       double ty = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
       NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
       NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0);
-      SmartDashboard.putNumber("LimelightTX", tx);
-      SmartDashboard.putNumber("LimelightTY", ty);
+      //SmartDashboard.putNumber("LimelightTX", tx);
+      //SmartDashboard.putNumber("LimelightTY", ty);
       double LimeCont = VisionPIDController.calculate(0, tx);
       // drivetrain.arcadeDrive(LimeCont, throttledeadzone);
-      SmartDashboard.putNumber("LimeCont", LimeCont);
+      //SmartDashboard.putNumber("LimeCont", LimeCont);
 
 
       /* 

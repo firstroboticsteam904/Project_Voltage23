@@ -15,7 +15,7 @@ public class LiftAuto extends CommandBase {
 
   public LiftAuto(double liftautoticks) {
     // Use addRequirements() here to declare subsystem dependencies.
-    double disiredliftticks = liftautoticks;
+    disiredliftticks = liftautoticks;
   }
 
   // Called when the command is initially scheduled.
@@ -26,8 +26,8 @@ public class LiftAuto extends CommandBase {
   @Override
   public void execute() {
     double liftgo = Robot.lift.lifttravel();
-    if(liftgo <= disiredliftticks){
-      Robot.lift.liftspeed(0.40);
+    if(liftgo >= disiredliftticks){
+      Robot.lift.liftspeed(-0.40);
     } else {
       Robot.lift.liftspeed(0);
     }
@@ -40,6 +40,11 @@ public class LiftAuto extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Robot.lift.lifttravel() >= disiredliftticks;
+    if(Robot.lift.lifttravel() <= disiredliftticks){
+      Robot.lift.liftspeed(0);
+      return true;
+    } else {
+      return false;
+    }
   }
 }
