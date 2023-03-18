@@ -6,7 +6,7 @@ package frc.robot.Auto.AutoSelections;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Auto.DriveAuto;
-import frc.robot.Auto.TableRightAuto;
+import frc.robot.Auto.ArmRelated.TableRightAuto;
 import frc.robot.Auto.ArmRelated.WinchExtendAuto;
 import frc.robot.Auto.ArmRelated.GrippersOpenAuto;
 import frc.robot.Auto.ArmRelated.LiftUpAuto;

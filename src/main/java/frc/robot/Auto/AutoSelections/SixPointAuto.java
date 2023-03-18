@@ -7,7 +7,7 @@ package frc.robot.Auto.AutoSelections;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Auto.DriveAuto;
-import frc.robot.Auto.TableRightAuto;
+import frc.robot.Auto.ArmRelated.TableRightAuto;
 import frc.robot.Auto.ArmRelated.GrippersOpenAuto;
 import frc.robot.Auto.ArmRelated.LiftUpAuto;
 import frc.robot.Auto.ArmRelated.TiltUpAuto;

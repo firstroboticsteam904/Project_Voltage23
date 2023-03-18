@@ -2,18 +2,18 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.Auto;
+package frc.robot.Auto.ArmRelated;
 
 import frc.robot.Robot;
 import frc.robot.Subsystems.Turntable;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class TableRightAuto extends CommandBase {
+public class TableLeftAuto extends CommandBase {
   /** Creates a new TableAuto. */
 
  double disiredtableticks;
 
-  public TableRightAuto(double tableautoticks) {
+  public TableLeftAuto(double tableautoticks) {
     // Use addRequirements() here to declare subsystem dependencies.
     disiredtableticks = tableautoticks;
   }
@@ -26,8 +26,8 @@ public class TableRightAuto extends CommandBase {
   @Override
   public void execute() {
     double tableturn = Robot.turntable.tabletravel();
-    if(tableturn >= disiredtableticks){
-      Robot.turntable.turntablespeed(-0.40);
+    if(tableturn <= disiredtableticks){
+      Robot.turntable.turntablespeed(0.40);
     }
   }
 
@@ -38,7 +38,7 @@ public class TableRightAuto extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(Robot.turntable.tabletravel() <= disiredtableticks){
+    if(Robot.turntable.tabletravel() >= disiredtableticks){
       Robot.turntable.turntablespeed(0);
       return true;
     } else {
