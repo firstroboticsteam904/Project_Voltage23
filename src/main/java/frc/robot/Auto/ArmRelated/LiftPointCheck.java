@@ -5,18 +5,19 @@
 package frc.robot.Auto.ArmRelated;
 
 import frc.robot.Robot;
-import frc.robot.Subsystems.Winch;
+import frc.robot.Subsystems.Lift;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class WinchRetractAuto extends CommandBase {
-  /** Creates a new WinchAuto. */
+public class LiftPointCheck extends CommandBase {
+  /** Creates a new LiftAuto. */
 
-double disiredwinchticks;
+  double disiredliftticks;
 
-  public WinchRetractAuto(double winchautoticks) {
+  public LiftPointCheck(double liftautoticks) {
     // Use addRequirements() here to declare subsystem dependencies.
-    double disiredwinchticks = winchautoticks;
+    disiredliftticks = liftautoticks;
   }
+
 
   // Called when the command is initially scheduled.
   @Override
@@ -25,9 +26,13 @@ double disiredwinchticks;
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double winchspin = Robot.winch.winchtravel();
-    if(winchspin >= disiredwinchticks){
-      Robot.winch.winchmotorspeed(-0.70);
+    double liftgo = Robot.lift.lifttravel();
+    if(liftgo <= disiredliftticks){
+      Robot.lift.liftspeed(0.40);
+    } else if(liftgo >= disiredliftticks){
+      Robot.lift.liftspeed(-.40);
+    } else {
+      Robot.lift.liftspeed(0);
     }
   }
 
@@ -38,12 +43,11 @@ double disiredwinchticks;
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(Robot.winch.winchtravel() <= disiredwinchticks){
-      Robot.winch.winchmotorspeed(0);
+    if((Robot.lift.lifttravel() <= disiredliftticks + 1 ) && (Robot.lift.lifttravel() >= disiredliftticks - 1)){
+      Robot.lift.liftspeed(0);
       return true;
     } else {
       return false;
     }
-
   }
 }

@@ -5,7 +5,9 @@
 package frc.robot.Auto.ControlableAutos;
 
 import frc.robot.Auto.ArmRelated.LiftDownAuto;
+import frc.robot.Auto.ArmRelated.LiftPointCheck;
 import frc.robot.Auto.ArmRelated.TiltDownAuto;
+import frc.robot.Auto.ArmRelated.WinchRetractAuto;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -17,8 +19,9 @@ public class OperationDown extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
+      new WinchRetractAuto(39),
       new TiltDownAuto(),
-      new LiftDownAuto(1)
+      new LiftPointCheck(2)
 
     );
   }

@@ -28,9 +28,7 @@ double disiredwinchticks;
     double winchspin = Robot.winch.winchtravel();
     if(winchspin <= disiredwinchticks){
       Robot.winch.winchmotorspeed(0.70);
-    } else {
-      Robot.winch.winchmotorspeed(0);
-    }
+    } 
   }
 
   // Called once the command ends or is interrupted.
@@ -40,6 +38,12 @@ double disiredwinchticks;
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Robot.winch.winchtravel() >= disiredwinchticks;
+    if(Robot.winch.winchtravel() >= disiredwinchticks){
+      Robot.winch.winchmotorspeed(0);
+      return true;
+    } else {
+      return false;
+    }
+
   }
 }

@@ -8,7 +8,9 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Auto.DriveAuto;
-import frc.robot.Auto.AutoSelections.advancedAuto;
+import frc.robot.Auto.ArmRelated.WinchExtendAuto;
+import frc.robot.Auto.AutoSelections.slightAdvanced;
+import frc.robot.Auto.ControlableAutos.OperationDown;
 import frc.robot.Auto.AutoSelections.driveback;
 import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Lift;
@@ -25,6 +27,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -57,23 +60,38 @@ public class Robot extends TimedRobot {
   public static final String driveback = "test";
   public static final String advancedAuto = "test2";
   public static final String SixPointAuto = "test3";
+  public static final String slightAdvanced = "test4";
+  public static final String biggerAdvanced = "test5";
+
+  public boolean flagvariable = true;
+  public boolean liftflag = false;
+
+  public boolean liftdownflag = true;
+  public boolean winchretractflag = false;
+  
   // public static pigeon Pigeon;
   Compressor pcmCompressor = new Compressor(PneumaticsModuleType.REVPH);
   static PneumaticHub m_pH = new PneumaticHub();
   public static DoubleSolenoid TiltSolenoid = m_pH.makeDoubleSolenoid(14, 2);
   Solenoid GearSolenoid = m_pH.makeSolenoid(1); // middle solenoid is a single solenoid
   public static DoubleSolenoid GripperSolenoid = m_pH.makeDoubleSolenoid(0, 15);
-  /*
-   * public Button button1 = new JoystickButton(opeeration, 1),
-   * button1 = new JoystickButton(opeeration, 2),
-   * button2 = new JoystickButton(opeeration, 3),
-   * button3 = new JoystickButton(opeeration, 4),
-   * button4 = new JoystickButton(opeeration, 5),
-   * button5 = new JoystickButton(opeeration, 6),
-   * button6 = new JoystickButton(opeeration, 7),
-   * button7 = new JoystickButton(opeeration, 8);
-   * 
-   */
+  final double desiredliftplacement = -29;
+  final double desiredwinchextend = 10;
+
+  final double desiredliftdown = -10;
+  final double desiredwinchretract = 1;
+
+  
+    public Button //button1 = new JoystickButton(opeeration, 1),
+   button2 = new JoystickButton(operation, 2);
+   /*button2 = new JoystickButton(opeeration, 3),
+    button3 = new JoystickButton(opeeration, 4),
+    button4 = new JoystickButton(opeeration, 5),
+    button5 = new JoystickButton(opeeration, 6),
+    button6 = new JoystickButton(opeeration, 7),
+    button7 = new JoystickButton(opeeration, 8);*/
+    
+   
   public static Timer ticktick = new Timer();
   public static Timer tocktock = new Timer();
   public static limelight distance;
@@ -86,8 +104,10 @@ public class Robot extends TimedRobot {
   public void robotInit() {
 
     m_chooser.setDefaultOption("SixPointAuto", SixPointAuto);
-    m_chooser.addOption("advancedAuto", advancedAuto);
+    m_chooser.addOption("slightAdvanced", slightAdvanced);
     m_chooser.addOption("driveback", driveback);
+    m_chooser.addOption("biggerAdvanced", biggerAdvanced);
+
     SmartDashboard.putData("Auto choices", m_chooser);
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1);
     drivematrix = new Joystick(0); // initialize the xbox driver joystick on port 1
@@ -100,6 +120,7 @@ public class Robot extends TimedRobot {
     lift = new Lift();
     turntable = new Turntable();
     winch = new Winch();
+    
     // Pigeon = new pigeon();
     // Pneumatic solenoids are set below. Three solenoids are set to be in reverse,
     // off, and reverse to begin
@@ -198,6 +219,9 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+
+
+ 
     double throttledeadzone;
     double turnratedeadzone;
 
@@ -253,20 +277,21 @@ public class Robot extends TimedRobot {
     // winch = extend
     // if the right bumper button is pressed on the operator controller, activate
     // the winch motor
-    if (operation.getRawButton(6)) {
+    if (operation.getRawButton(7)) {
       winch.winchmotorspeed(0.8); // when the right bumper is pressed you want to exstand the arm
-    } else if (operation.getRawButton(5)) { // if the left bumper button is we want too retract the arm
+    } else if (operation.getRawButton(8)) { // if the left bumper button is we want too retract the arm
       winch.winchmotorspeed(-0.8);
     } else {
       winch.winchmotorspeed(0);
     }
 
     // if the y button is pressed on the operator controller, tilts the arm up
-    if (operation.getRawButton(4)) {
+   /*if (operation.getRawButton(4)) {
       TiltSolenoid.set(DoubleSolenoid.Value.kReverse);
     } else if (operation.getRawButton(2)) {// if the a buttom is pressed you want to tilt the gripper
       TiltSolenoid.set(DoubleSolenoid.Value.kForward);
     }
+*/
 
     // NEW Y BUTTON PRESS - If pressed, lift the arm up and extend the winch
     /*
@@ -340,6 +365,81 @@ public class Robot extends TimedRobot {
        * 
        * 
       */
+
+      
+
+      if(operation.getRawButtonPressed(4)){
+        
+        if(flagvariable == false){
+          winchretractflag = false;
+          liftflag = true;
+        }
+
+        else if(flagvariable == true){
+          winchretractflag = false;
+          liftflag = true;
+        }
+      }
+
+      if(liftflag == true && flagvariable == true){
+        double liftup = new Lift().lifttravel();
+        if(liftup <= desiredliftplacement){
+          Robot.lift.liftspeed(0);
+          liftflag = false;
+          flagvariable = false;
+        } else {
+          Robot.lift.liftspeed(-0.6);
+        }
+      }
+
+      if(liftflag == true && flagvariable == false){
+        double winchextend = new Winch().winchtravel();
+        if(winchextend >= desiredwinchextend){
+          Robot.winch.winchmotorspeed(0);
+          liftflag = false;
+          flagvariable = true;
+        } else {
+          Robot.winch.winchmotorspeed(0.8);
+          TiltSolenoid.set(Value.kReverse);
+        }
+      }
+
+
+      button2.whenPressed(new OperationDown());
+
+ /*    if(operation.getRawButtonPressed(2)){
+        if(liftdownflag == false){
+          liftflag = false;
+          winchretractflag = true;
+        }
+        else if(liftdownflag == true){
+          liftflag = false;
+          winchretractflag = true;
+        }
+      }
+
+      if(winchretractflag == true && liftdownflag == true){
+        double liftup = new Lift().lifttravel();
+        if(liftup >= desiredliftdown){
+          Robot.lift.liftspeed(0);
+          liftdownflag = false;
+          winchretractflag = false;
+        } else {
+          Robot.lift.liftspeed(0.6);
+        }
+      }
+
+      if(winchretractflag == true && liftdownflag == false){
+        double winchextend = new Winch().winchtravel();
+        if(winchextend <= desiredwinchretract){
+          Robot.winch.winchmotorspeed(0);
+          liftdownflag = true;
+          winchretractflag = false;
+        } else {
+          Robot.winch.winchmotorspeed(-0.8);
+          TiltSolenoid.set(Value.kForward);
+        }
+      }*/
 
     }
   }
