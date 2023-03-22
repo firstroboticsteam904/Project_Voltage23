@@ -4,18 +4,19 @@
 
 package frc.robot.Auto.ArmRelated;
 
-import frc.robot.Robot;
-import frc.robot.Subsystems.Winch;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Robot;
 
-public class WinchExtendAuto extends CommandBase {
-  /** Creates a new WinchAuto. */
+public class WinchPointCheck extends CommandBase {
+  /** Creates a new WinchPointCheck. */
 
-double disiredwinchticks;
+  double Desiredwinchticks;
 
-  public WinchExtendAuto(double winchautoticks) {
+  public WinchPointCheck(double winchticks) {
     // Use addRequirements() here to declare subsystem dependencies.
-    disiredwinchticks = winchautoticks;
+
+    Desiredwinchticks = winchticks;
+
   }
 
   // Called when the command is initially scheduled.
@@ -26,9 +27,12 @@ double disiredwinchticks;
   @Override
   public void execute() {
     double winchspin = Robot.winch.winchtravel();
-    if(winchspin >= disiredwinchticks){
+    if(winchspin >= Desiredwinchticks){
       Robot.winch.winchmotorspeed(-0.70);
-    } 
+    } else if(winchspin <= Desiredwinchticks){
+      Robot.winch.winchmotorspeed(0.70);
+    }
+
   }
 
   // Called once the command ends or is interrupted.
@@ -38,12 +42,11 @@ double disiredwinchticks;
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(Robot.winch.winchtravel() <= disiredwinchticks){
+    if((Robot.winch.winchtravel() <= Desiredwinchticks - 1) && (Robot.winch.winchtravel() >= Desiredwinchticks + 1)){
       Robot.winch.winchmotorspeed(0);
       return true;
-    } else {
-      return false;
+    }else {
+    return false;
     }
-
   }
 }

@@ -15,7 +15,7 @@ double disiredwinchticks;
 
   public WinchRetractAuto(double winchautoticks) {
     // Use addRequirements() here to declare subsystem dependencies.
-    double disiredwinchticks = winchautoticks;
+    disiredwinchticks = winchautoticks;
   }
 
   // Called when the command is initially scheduled.
@@ -26,8 +26,8 @@ double disiredwinchticks;
   @Override
   public void execute() {
     double winchspin = Robot.winch.winchtravel();
-    if(winchspin >= disiredwinchticks){
-      Robot.winch.winchmotorspeed(-0.70);
+    if(winchspin <= disiredwinchticks){
+      Robot.winch.winchmotorspeed(0.70);
     }
   }
 
@@ -38,7 +38,7 @@ double disiredwinchticks;
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(Robot.winch.winchtravel() <= disiredwinchticks){
+    if(Robot.winch.winchtravel() >= disiredwinchticks){
       Robot.winch.winchmotorspeed(0);
       return true;
     } else {

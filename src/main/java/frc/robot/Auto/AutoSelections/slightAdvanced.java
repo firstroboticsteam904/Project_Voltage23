@@ -23,16 +23,16 @@ public class slightAdvanced extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-    new LiftUpAuto(-35), 
-    new TableRightAuto(-25), 
+    new LiftUpAuto(-60), 
+    new TableRightAuto(-22), 
     new TiltUpAuto(),
     new WaitCommand(1), 
-    new WinchExtendAuto(-25), //might be positive
-    new WaitCommand(2),
+    new WinchExtendAuto(-60), //might be positive
+    new WaitCommand(1),
     new GrippersOpenAuto(),
     new WaitCommand(1),
-    new WinchRetractAuto(3), //should be 0 or opposite +/- of extend
-    new DriveAuto(60)
+    new WinchRetractAuto(-1) //should be 0 or opposite +/- of extend
+    //new DriveAuto(60)
     );
   }
 }

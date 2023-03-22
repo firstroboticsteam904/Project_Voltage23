@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj.GenericHID;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -51,7 +52,8 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private Joystick drivematrix; // driver joystick
-  private Joystick operation;
+  public Joystick operation;
+  //private Joystick operation;
   public static Drivetrain drivetrain;
   double deadzone = 0.25;
   public static Lift lift;
@@ -63,11 +65,11 @@ public class Robot extends TimedRobot {
   public static final String slightAdvanced = "test4";
   public static final String biggerAdvanced = "test5";
 
-  public boolean flagvariable = true;
-  public boolean liftflag = false;
+  public int flagvariable = 1;
+  public int liftflag = 0;
 
-  public boolean liftdownflag = true;
-  public boolean winchretractflag = false;
+  public int liftdownflag = 1;
+  public int winchretractflag = 0;
   
   // public static pigeon Pigeon;
   Compressor pcmCompressor = new Compressor(PneumaticsModuleType.REVPH);
@@ -75,21 +77,20 @@ public class Robot extends TimedRobot {
   public static DoubleSolenoid TiltSolenoid = m_pH.makeDoubleSolenoid(14, 2);
   Solenoid GearSolenoid = m_pH.makeSolenoid(1); // middle solenoid is a single solenoid
   public static DoubleSolenoid GripperSolenoid = m_pH.makeDoubleSolenoid(0, 15);
-  final double desiredliftplacement = -29;
-  final double desiredwinchextend = 10;
-
+  final double desiredliftplacement = -65;
+  final double desiredwinchextend = -60;
   final double desiredliftdown = -10;
-  final double desiredwinchretract = 1;
+  final double desiredwinchretract = -1;
 
   
-    public Button //button1 = new JoystickButton(opeeration, 1),
-   button2 = new JoystickButton(operation, 2);
-   /*button2 = new JoystickButton(opeeration, 3),
-    button3 = new JoystickButton(opeeration, 4),
-    button4 = new JoystickButton(opeeration, 5),
-    button5 = new JoystickButton(opeeration, 6),
-    button6 = new JoystickButton(opeeration, 7),
-    button7 = new JoystickButton(opeeration, 8);*/
+   //button1 = new JoystickButton(opeeration, 1),
+   //public Button button2 = new JoystickButton(operation, 2);
+   /*button3 = new JoystickButton(opeeration, 3),
+    button4 = new JoystickButton(opeeration, 4),
+    button5 = new JoystickButton(opeeration, 5),
+    button6 = new JoystickButton(opeeration, 6),
+    button7 = new JoystickButton(opeeration, 7),
+    button8 = new JoystickButton(opeeration, 8);*/
     
    
   public static Timer ticktick = new Timer();
@@ -115,8 +116,8 @@ public class Robot extends TimedRobot {
     drivematrix.setXChannel(4); // initialize the x axis controller on joystick channel 3
     drivetrain = new Drivetrain();
     operation = new Joystick(1); // initialize the logitech operator joystick on port 1
-    operation.setYChannel(1);
-    operation.setXChannel(2);
+    //operation.setYChannel(1);
+    //operation.setXChannel(2);
     lift = new Lift();
     turntable = new Turntable();
     winch = new Winch();
@@ -134,6 +135,16 @@ public class Robot extends TimedRobot {
 
     // configure the pigeon
     // Pigeon.configurePigeon();
+   
+    //button1 = new JoystickButton(opeeration, 1),
+   //Button button2 = new JoystickButton(operation, 2);
+   /*button3 = new JoystickButton(opeeration, 3),
+    button4 = new JoystickButton(opeeration, 4),
+    button5 = new JoystickButton(opeeration, 5),
+    button6 = new JoystickButton(opeeration, 6),
+    button7 = new JoystickButton(opeeration, 7),
+    button8 = new JoystickButton(opeeration, 8);*/
+
   }
 
   /**
@@ -178,9 +189,10 @@ public class Robot extends TimedRobot {
     Command driveBack = new driveback();
     Command driveAuto2 = new DriveAuto(60);
     Command sixpoints = new frc.robot.Auto.AutoSelections.SixPointAuto();
+    Command slightAdvAuto = new frc.robot.Auto.AutoSelections.slightAdvanced();
     switch (m_autoSelected) {
-      case advancedAuto:
-        CommandScheduler.getInstance().schedule(new WaitCommand(.5));
+      case slightAdvanced:
+        CommandScheduler.getInstance().schedule(slightAdvAuto);
         break;
       case driveback:
       default:
@@ -258,13 +270,13 @@ public class Robot extends TimedRobot {
      * }
      */
 
-    if (operation.getRawAxis(1) >= 0.25) { // if the left joystick is pushed up raise the lift
+    /*if (operation.getRawAxis(1) >= 0.25) { // if the left joystick is pushed up raise the lift
       lift.liftspeed(0.7);
     } else if (operation.getRawAxis(1) <= -0.25) {// if the left joystick is pushed down bring the lift back down
       lift.liftspeed(-0.7);
     } else {
       lift.liftspeed(0);
-    }
+    }*/
 
     if (operation.getRawAxis(2) >= 0.50) { // if right joystick is pushed to the right turn the turn table to the right
       turntable.turntablespeed(-0.6);
@@ -290,8 +302,8 @@ public class Robot extends TimedRobot {
       TiltSolenoid.set(DoubleSolenoid.Value.kReverse);
     } else if (operation.getRawButton(2)) {// if the a buttom is pressed you want to tilt the gripper
       TiltSolenoid.set(DoubleSolenoid.Value.kForward);
-    }
-*/
+    }*/
+
 
     // NEW Y BUTTON PRESS - If pressed, lift the arm up and extend the winch
     /*
@@ -357,7 +369,7 @@ public class Robot extends TimedRobot {
       double LimeCont = VisionPIDController.calculate(0, tx);
       // drivetrain.arcadeDrive(LimeCont, throttledeadzone);
       //SmartDashboard.putNumber("LimeCont", LimeCont);
-
+    }
 
       /* 
        * button1.whenPressed(new OperationUpAuto)
@@ -368,81 +380,89 @@ public class Robot extends TimedRobot {
 
       
 
-      if(operation.getRawButtonPressed(4)){
-        
-        if(flagvariable == false){
-          winchretractflag = false;
-          liftflag = true;
-        }
+     if(operation.getRawButton(4)){
+        SmartDashboard.putNumber("liftFlag",liftflag);
+      
+        if(flagvariable == 0){
+          //winchretractflag = 0;
+          liftflag = 1;
+          SmartDashboard.putNumber("liftFlag",liftflag);
+           }
 
-        else if(flagvariable == true){
-          winchretractflag = false;
-          liftflag = true;
+        else if(flagvariable == 1){
+          //winchretractflag = false;
+          liftflag = 1;
+          SmartDashboard.putNumber("liftFlag", liftflag);
         }
       }
 
-      if(liftflag == true && flagvariable == true){
-        double liftup = new Lift().lifttravel();
+      if(liftflag == 1 && flagvariable == 1){
+        double liftup = Robot.lift.lifttravel();
         if(liftup <= desiredliftplacement){
           Robot.lift.liftspeed(0);
-          liftflag = false;
-          flagvariable = false;
+          liftflag = 0;
+          flagvariable = 0;
+          SmartDashboard.putString("Lifting lift:", "Yes");
         } else {
           Robot.lift.liftspeed(-0.6);
         }
       }
 
-      if(liftflag == true && flagvariable == false){
-        double winchextend = new Winch().winchtravel();
-        if(winchextend >= desiredwinchextend){
+      if(liftflag == 1 && flagvariable == 0){
+        double winchextend = Robot.winch.winchtravel();
+        if(winchextend <= desiredwinchextend){
           Robot.winch.winchmotorspeed(0);
-          liftflag = false;
-          flagvariable = true;
+          liftflag = 0;
+          flagvariable = 1;
         } else {
-          Robot.winch.winchmotorspeed(0.8);
+          Robot.winch.winchmotorspeed(-0.8);
           TiltSolenoid.set(Value.kReverse);
         }
       }
 
 
-      button2.whenPressed(new OperationDown());
+     /*if(operation.getRawButtonPressed(2)){
+      CommandScheduler.getInstance().schedule(new OperationDown());
+      CommandScheduler.getInstance().run();
+     }*/
 
- /*    if(operation.getRawButtonPressed(2)){
-        if(liftdownflag == false){
-          liftflag = false;
-          winchretractflag = true;
+     if(operation.getRawButtonPressed(2)){
+        if(liftdownflag == 0){
+          liftflag = 0;
+          winchretractflag = 1;
         }
-        else if(liftdownflag == true){
-          liftflag = false;
-          winchretractflag = true;
+        else if(liftdownflag == 1){
+          liftflag = 0;
+          winchretractflag = 1;
         }
       }
 
-      if(winchretractflag == true && liftdownflag == true){
-        double liftup = new Lift().lifttravel();
+      if(winchretractflag == 1 && liftdownflag == 1){
+        double liftup = Robot.lift.lifttravel();
         if(liftup >= desiredliftdown){
           Robot.lift.liftspeed(0);
-          liftdownflag = false;
-          winchretractflag = false;
+          liftdownflag = 0;
+          winchretractflag = 0;
         } else {
           Robot.lift.liftspeed(0.6);
         }
       }
 
-      if(winchretractflag == true && liftdownflag == false){
-        double winchextend = new Winch().winchtravel();
+      if(winchretractflag == 1 && liftdownflag == 0){
+        double winchextend = Robot.winch.winchtravel();
         if(winchextend <= desiredwinchretract){
           Robot.winch.winchmotorspeed(0);
-          liftdownflag = true;
-          winchretractflag = false;
+          liftdownflag = 1;
+          winchretractflag = 0;
         } else {
           Robot.winch.winchmotorspeed(-0.8);
           TiltSolenoid.set(Value.kForward);
         }
-      }*/
+      }
+      
 
     }
-  }
+  
 
   // later work - write code to place game object
 

@@ -9,6 +9,7 @@ import frc.robot.Auto.ArmRelated.LiftPointCheck;
 import frc.robot.Auto.ArmRelated.TiltDownAuto;
 import frc.robot.Auto.ArmRelated.WinchRetractAuto;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -20,9 +21,10 @@ public class OperationDown extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new WinchRetractAuto(39),
+      new WaitCommand(0.2),
       new TiltDownAuto(),
-      new LiftPointCheck(2)
-
+      new WaitCommand(0.2),
+      new LiftPointCheck(27)
     );
   }
 }

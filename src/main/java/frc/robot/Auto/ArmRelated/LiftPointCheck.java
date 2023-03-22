@@ -31,8 +31,6 @@ public class LiftPointCheck extends CommandBase {
       Robot.lift.liftspeed(0.40);
     } else if(liftgo >= disiredliftticks){
       Robot.lift.liftspeed(-.40);
-    } else {
-      Robot.lift.liftspeed(0);
     }
   }
 
