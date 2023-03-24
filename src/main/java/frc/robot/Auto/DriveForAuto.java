@@ -4,61 +4,48 @@
 
 package frc.robot.Auto;
 
-import frc.robot.Robot;
-import frc.robot.Subsystems.Drivetrain;
-
-import javax.naming.spi.DirStateFactory;
-
-import com.revrobotics.RelativeEncoder;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Robot;
 
-public class DriveAuto extends CommandBase {
-  /** Creates a new DriveAuto. */
-  private double desiredDistance;
+public class DriveForAuto extends CommandBase {
+  /** Creates a new DriveForAuto. */
+  private double desiredForward;
 
-  public DriveAuto(double driveDistance) {
+  public DriveForAuto(double driveForward) {
     // Use addRequirements() here to declare subsystem dependencies.
     super();
-    desiredDistance = driveDistance;
+    desiredForward = driveForward;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Robot.drivetrain.resetdistancetraveled();
-    SmartDashboard.putString("Current Command", "Driveback");
-
+    //Robot.drivetrain.resetdistancetraveled();
+    SmartDashboard.putString("Current Command", "DriveForward");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     double robovroom = Robot.drivetrain.getdistancetravled();
-    if (robovroom < desiredDistance) {
-      Robot.drivetrain.arcadeDrive(0, 0.30);
-      SmartDashboard.putString("reading auto?", "yes");
-    }
-    // // } else {
-    // Robot.drivetrain.arcadeDrive(0, 0);
-    // }
+      if(robovroom > desiredForward ){
+        Robot.drivetrain.arcadeDrive(0, -0.30);
+      }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (Robot.drivetrain.getdistancetravled() > desiredDistance) {
+    if (Robot.drivetrain.getdistancetravled() < desiredForward) {
       Robot.drivetrain.arcadeDrive(0, 0);
       return true;
     } else {
       return false;
     }
-
   }
 }
