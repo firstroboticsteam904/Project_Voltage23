@@ -24,18 +24,18 @@ public class BackNFor extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-    //new LiftUpAuto(-60), 
-    //new TableRightAuto(-22), 
-    //new TiltUpAuto(),
-    //new WaitCommand(1), 
-    //new WinchExtendAuto(-60), //might be positive
-    //new WaitCommand(1),
-    //new GrippersOpenAuto(),
-    //new WaitCommand(1),
-    //new WinchRetractAuto(-1), //should be 0 or opposite +/- of extend
+    new LiftUpAuto(-75), 
+    new TableRightAuto(-23), 
+    new TiltUpAuto(),
+    new WaitCommand(1), 
+    new WinchExtendAuto(-60), //might be positive
+    new WaitCommand(1),
+    new GrippersOpenAuto(),
+    new WaitCommand(1),
+    new WinchRetractAuto(-40), //should be 0 or opposite +/- of extend
     new DriveAuto(0.37), 
     new WaitCommand(2),
-    new DriveForAuto(0.22)
+    new DriveForAuto(0.195)
 
     );
   }
