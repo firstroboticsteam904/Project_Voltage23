@@ -310,7 +310,7 @@ public class Robot extends TimedRobot {
 
     // if the y button is pressed on the operator controller, tilts the arm up
    if (operation.getRawButton(10)) {
-      TiltSolenoid.set(DoubleSolenoid.Value.kReverse);
+      TiltSolenoid.set(DoubleSolenoid.Value.kForward);
     } /*else if (operation.getRawButton(2)) {// if the a buttom is pressed you want to tilt the gripper
       TiltSolenoid.set(DoubleSolenoid.Value.kForward);
     }*/
@@ -459,8 +459,20 @@ public class Robot extends TimedRobot {
           winchretractflag = 0;
         } else {
           Robot.lift.liftspeed(0.6);
+          TiltSolenoid.set(Value.kForward);
         }
       }
+
+      /*if(winchretractflag == 1 && liftdownflag == 1){
+        double winchretract = Robot.winch.winchtravel();
+        if(winchretract <= desiredwinchretract){
+          Robot.winch.winchmotorspeed(0);
+          liftdownflag =0;
+          winchretractflag = 0;
+        } else {
+          Robot.winch.winchmotorspeed(-0.8);
+        }
+      }*/
 
       if(winchretractflag == 1 && liftdownflag == 1){
         double winchextend = Robot.winch.winchtravel();
@@ -470,7 +482,7 @@ public class Robot extends TimedRobot {
           winchretractflag = 0;
         } else {
           Robot.winch.winchmotorspeed(0.8);
-          TiltSolenoid.set(Value.kForward);
+          //TiltSolenoid.set(Value.kForward);
         }
       }
       
