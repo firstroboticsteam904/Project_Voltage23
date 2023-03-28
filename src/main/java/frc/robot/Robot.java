@@ -35,7 +35,11 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.GenericHID;
+import frc.robot.pigeon;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -48,24 +52,23 @@ import edu.wpi.first.wpilibj.GenericHID;
  */
 
 public class Robot extends TimedRobot {
-  // private static final String kDefaultAuto = "Default";
-  private Command autonomousCommand;
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private Joystick drivematrix; // driver joystick
   public Joystick operation;
-  //private Joystick operation;
   public static Drivetrain drivetrain;
   double deadzone = 0.15;
   public static Lift lift;
   public static Turntable turntable;
   public static Winch winch;
+  public static pigeon Pigeon;
   public static final String driveback = "test";
-  //public static final String advancedAuto = "test2";
   public static final String BackwardsForwards = "test2";
   public static final String SixPointAuto = "test3";
-  //public static final String slightAdvanced = "test4";
-  //public static final String biggerAdvanced = "test5";
+
+  public int GripperFlag = 1;
+
+  public DigitalInput gripperlimitswitch = new DigitalInput(0);
 
   public int flagvariable = 1;
   public int liftflag = 0;
@@ -85,15 +88,7 @@ public class Robot extends TimedRobot {
   final double desiredwinchretract = -40;
 
   
-   //button1 = new JoystickButton(opeeration, 1),
-   //public Button button2 = new JoystickButton(operation, 2);
-   /*button3 = new JoystickButton(opeeration, 3),
-    button4 = new JoystickButton(opeeration, 4),
-    button5 = new JoystickButton(opeeration, 5),
-    button6 = new JoystickButton(opeeration, 6),
-    button7 = new JoystickButton(opeeration, 7),
-    button8 = new JoystickButton(opeeration, 8);*/
-    
+   //Trigger button2 = new JoystickButton(operation, 2);    
    
   public static Timer ticktick = new Timer();
   public static Timer tocktock = new Timer();
@@ -123,29 +118,17 @@ public class Robot extends TimedRobot {
     lift = new Lift();
     turntable = new Turntable();
     winch = new Winch();
-    
-    // Pigeon = new pigeon();
-    // Pneumatic solenoids are set below. Three solenoids are set to be in reverse,
-    // off, and reverse to begin
+    Pigeon = new pigeon();
+
+    // Pneumatic solenoids are set below. Three solenoids are set to be in Forward,
+    // off, and Forward to begin
     pcmCompressor.enableDigital();
     TiltSolenoid.set(DoubleSolenoid.Value.kForward);
     GearSolenoid.set(false);
     GripperSolenoid.set(DoubleSolenoid.Value.kForward);
 
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1);
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
-
-    // configure the pigeon
-    // Pigeon.configurePigeon();
-   
-    //button1 = new JoystickButton(opeeration, 1),
-   //Button button2 = new JoystickButton(operation, 2);
-   /*button3 = new JoystickButton(opeeration, 3),
-    button4 = new JoystickButton(opeeration, 4),
-    button5 = new JoystickButton(opeeration, 5),
-    button6 = new JoystickButton(opeeration, 6),
-    button7 = new JoystickButton(opeeration, 7),
-    button8 = new JoystickButton(opeeration, 8);*/
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);   
 
   }
 
@@ -184,24 +167,15 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     //SmartDashboard.putString("reading auto?", "yes");
-    // CommandScheduler.getInstance().run();
     m_autoSelected = m_chooser.getSelected();
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    // System.out.println("Auto selected: " + m_autoSelected);
     Command driveBack = new driveback();
-    //Command driveAuto2 = new DriveAuto(60);
     Command sixpoints = new frc.robot.Auto.AutoSelections.SixPointAuto();
-    //Command slightAdvAuto = new frc.robot.Auto.AutoSelections.slightAdvanced();
     Command BackForth = new frc.robot.Auto.AutoSelections.BackNFor();
     switch (m_autoSelected) {
       case driveback:
         CommandScheduler.getInstance().schedule(driveBack);
 
         break;
-      
-      /*case slightAdvanced:
-        CommandScheduler.getInstance().schedule(slightAdvAuto);
-        break;*/
       
       case SixPointAuto:
       CommandScheduler.getInstance().schedule(sixpoints);
@@ -215,22 +189,11 @@ public class Robot extends TimedRobot {
         break;
     }
 
-      
-    /*
-     * super.autonomousInit();
-     * if(autonomousCommand != null){
-     * autonomousCommand.cancel();
-     * }
-     * 
-     * autonomousCommand = m_chooser.getSelected();
-     * autonomousCommand.execute();
-     */
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    // CommandScheduler.getInstance().run();
     SmartDashboard.putString("reading autoperiodic", "yes");
   }
 
@@ -243,8 +206,14 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
+    if(gripperlimitswitch.get()){
+      SmartDashboard.putString("LimitSwitch Status", "pushed");
+      SmartDashboard.putBoolean("Limitswitch Status", true);
+    } else {
+      SmartDashboard.putString("LimitSwitch Status", "not pushed");
+      SmartDashboard.putBoolean("Limitswitch Status", false);
+    }
 
- 
     double throttledeadzone;
     double turnratedeadzone;
 
@@ -263,23 +232,6 @@ public class Robot extends TimedRobot {
     drivetrain.arcadeDrive(turnratedeadzone, throttledeadzone); // send joystick inputs to arcadeDrive function in
                                                                 // drivetrain class to drive robot
 
-    /*
-     * if(Math.abs(operation.getRawAxis(1))>deadzone){
-     * lift.liftspeed(Math.pow(operation.getY(), 3));
-     * } else {
-     * lift.liftspeed(0);
-     * }
-     * 
-     * if(Math.abs(operation.getX())>deadzone){
-     * turntable.turntablespeed(Math.pow(operation.getX(), 3));
-     * } else if(drivematrix.getRawButtonPressed(1)){
-     * 
-     * }
-     * 
-     * else {
-     * turntable.turntablespeed(0);
-     * }
-     */
 
     if (operation.getRawAxis(1) >= 0.25) { // if the left joystick is pushed up raise the lift
       lift.liftspeed(0.5);
@@ -297,12 +249,10 @@ public class Robot extends TimedRobot {
     } else
       turntable.turntablespeed(0);
 
-    // winch = extend
-    // if the right bumper button is pressed on the operator controller, activate
-    // the winch motor
-    if (operation.getRawButton(7)) {
-      winch.winchmotorspeed(0.8); // when the right bumper is pressed you want to exstand the arm
-    } else if (operation.getRawButton(8)) { // if the left bumper button is we want too retract the arm
+
+    if (operation.getRawButton(7)) { // when the right triggr is pressed you want to exstand the arm
+      winch.winchmotorspeed(0.8); 
+    } else if (operation.getRawButton(8)) { // if the left trigger button is we want too retract the arm
       winch.winchmotorspeed(-0.8);
     } else {
       winch.winchmotorspeed(0);
@@ -316,29 +266,18 @@ public class Robot extends TimedRobot {
     }*/
 
 
-    // NEW Y BUTTON PRESS - If pressed, lift the arm up and extend the winch
-    /*
-     * if(operation.getRawButton(button:4)){
-     * //lift arm up - call Lift.java function to read encoder and interpret value
-     * and position
-     * double LiftPosition = Lift.lifttravel();
-     * topLift = 50; //encoder value for the top of the lift
-     * 
-     * }
-     * 
-     * } else if(operation.getRawButton(button:2)){
-     * 
-     * }
-     */
 
     // if the button x is pressed on the operator controller, we want the gripper to
-    // open
-    if (operation.getRawButton(1)) {
+    // close
+    /*if (operation.getRawButton(1)) {
       GripperSolenoid.set(DoubleSolenoid.Value.kForward);
 
-    } else if (operation.getRawButton(3)) {// if the b button is pressed we want the gripper to close
+    } else if (operation.getRawButton(3)) {// if the b button is pressed we want the gripper to open
       GripperSolenoid.set(DoubleSolenoid.Value.kReverse);
-    }
+    } 
+    else if (gripperlimitswitch.get()) {
+      GripperSolenoid.set(DoubleSolenoid.Value.kForward);
+    }*/
 
     /*
      * if (operation.getRawButtonPressed(4)){
@@ -346,7 +285,7 @@ public class Robot extends TimedRobot {
      * }
      */
 
-    // if the left bumber button is pressed on the operator controller, set the gear
+    // if the left bumber button is pressed on the driver controller, set the gear
     // solenoid to forward
     if (drivematrix.getRawButton(5)) { // strong
       GearSolenoid.set(true);
@@ -356,17 +295,9 @@ public class Robot extends TimedRobot {
       GearSolenoid.set(false);
     }
 
-    /*
-     * if {
-     * GearSolenoid.set(false);
-     * }
-     */
-
-    // get values from the pigeon
-    // Pigeon.getPigeonValues();
     final double targetOffsetAngle_Vertical = ty.getDouble(0.0);
 
-    if (drivematrix.getRawButton(10)) {// if the left bumper is pressed tell the robot to find the target
+    if (drivematrix.getRawButton(10)) {// if start is pressed tell the robot to find the target
 
       NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
       NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0);
@@ -375,21 +306,23 @@ public class Robot extends TimedRobot {
       double ty = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
       NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
       NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0);
-      //SmartDashboard.putNumber("LimelightTX", tx);
-      //SmartDashboard.putNumber("LimelightTY", ty);
       double LimeCont = VisionPIDController.calculate(0, tx);
-      // drivetrain.arcadeDrive(LimeCont, throttledeadzone);
-      //SmartDashboard.putNumber("LimeCont", LimeCont);
     }
 
-      /* 
-       * button1.whenPressed(new OperationUpAuto)
-       * button2.whenPressed(new OperationDownAuto)
-       * 
-       * 
-      */
+    //button2.onTrue(new OperationDown());
 
-      
+
+    if(operation.getRawButton(3)){
+      GripperFlag = 0;
+      GripperSolenoid.set(DoubleSolenoid.Value.kReverse);
+      if(gripperlimitswitch.get() == false){
+        GripperFlag = 1;
+      }
+    }
+
+    if(operation.getRawButton(1) || ((GripperFlag == 1) && gripperlimitswitch.get() == true)){
+      GripperSolenoid.set(DoubleSolenoid.Value.kForward);
+    }
 
      if(operation.getRawButton(4)){
         SmartDashboard.putNumber("liftFlag",liftflag);
@@ -432,12 +365,6 @@ public class Robot extends TimedRobot {
       }
 
 
-     /*if(operation.getRawButtonPressed(2)){
-      CommandScheduler.getInstance().schedule(new OperationDown());
-      CommandScheduler.getInstance().run();
-      flagvariable = 1;
-     }*/
-
      if(operation.getRawButtonPressed(2)){
         if(liftdownflag == 0){
           liftflag = 0;
@@ -474,6 +401,12 @@ public class Robot extends TimedRobot {
         }
       }*/
 
+
+      /*if(drivematrix.getRawButton(4)){
+        Pigeon.getPigeonValues();
+        Pigeon.AutoBalanceRobot();
+      }*/
+
       if(winchretractflag == 1 && liftdownflag == 1){
         double winchextend = Robot.winch.winchtravel();
         if(winchextend >= desiredwinchretract){
@@ -482,9 +415,10 @@ public class Robot extends TimedRobot {
           winchretractflag = 0;
         } else {
           Robot.winch.winchmotorspeed(0.8);
-          //TiltSolenoid.set(Value.kForward);
         }
       }
+
+    
       
 
     }

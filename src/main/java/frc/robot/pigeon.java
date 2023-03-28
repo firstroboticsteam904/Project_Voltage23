@@ -7,7 +7,7 @@ import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // Add your docs here.
  
-/*public class pigeon {
+public class pigeon {
 //initializing the pigeon on can bus __
 WPI_PigeonIMU m_pigeon = new WPI_PigeonIMU(15); //pigeon on CAN device ID 15
 public void configurePigeon(){
@@ -30,24 +30,12 @@ public void getPigeonValues(){
   //function to autobalance robot on the charging station
   public void AutoBalanceRobot(){
     //move lift in if it is out
-    
+    double output = m_pigeon.getPitch();
+
+    output *= 0.02;
+    Robot.drivetrain.arcadeDrive(output, 0);
     //tilt gripper to proper angle
-
-    //close gripper
-
-    //initialize PID variables
-    double kP = 1; //proportinal constant
-    double kD = 1; //derivative constant
-
-    //get pigeon values
-
-    //call drivetrain function arcade drive
-
-    //using PID, driving train, and pigeon values, adjust position on balance beam 
-    double error = -m_pigeon.getRate(); //returns the rate of rotation of the pigeon sensor given in degrees/second
-    drivetrain.arcadeDrive((0.5+(kP*error)+(kD*error)),0);
   }
-  
-}*/
+}
 
 

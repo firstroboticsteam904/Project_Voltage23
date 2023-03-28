@@ -20,11 +20,12 @@ public class OperationDown extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new WinchRetractAuto(39),
+      new WinchRetractAuto(-40),
       new WaitCommand(0.2),
       new TiltDownAuto(),
       new WaitCommand(0.2),
-      new LiftPointCheck(27)
+      //new LiftPointCheck(27)
+      new LiftDownAuto(40)
     );
   }
 }

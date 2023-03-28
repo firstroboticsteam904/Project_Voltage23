@@ -28,7 +28,7 @@ public class BackNFor extends SequentialCommandGroup {
     new TableRightAuto(-23), 
     new TiltUpAuto(),
     new WaitCommand(1), 
-    new WinchExtendAuto(-60), //might be positive
+    new WinchExtendAuto(-65), //might be positive
     new WaitCommand(1),
     new GrippersOpenAuto(),
     new WaitCommand(1),
