@@ -84,7 +84,7 @@ public class Robot extends TimedRobot {
   public static DoubleSolenoid TiltSolenoid = m_pH.makeDoubleSolenoid(14, 2);
   Solenoid GearSolenoid = m_pH.makeSolenoid(1); // middle solenoid is a single solenoid
   public static DoubleSolenoid GripperSolenoid = m_pH.makeDoubleSolenoid(0, 15);
-  final double desiredliftplacement = -70;
+  final double desiredliftplacement = -80;
   final double desiredwinchextend = -60;
   final double desiredliftdown = 40;
   final double desiredwinchretract = -40;
@@ -318,14 +318,21 @@ public class Robot extends TimedRobot {
 
     if(operation.getRawButton(3)){
       GripperFlag = 0;
+      SmartDashboard.putString("Grip", "LOOKING");
       GripperSolenoid.set(DoubleSolenoid.Value.kReverse);
       if(gripperlimitswitch.get() == false){
+        SmartDashboard.putString("Grip", "SET");
         GripperFlag = 1;
       }
     }
 
     if(operation.getRawButton(1) || ((GripperFlag == 1) && gripperlimitswitch.get() == true)){
       GripperSolenoid.set(DoubleSolenoid.Value.kForward);
+      SmartDashboard.putString("Grip", "CLOSED");
+    }
+
+    if(lift.lifttravel() > -70){
+      flagvariable = 1;
     }
 
      if(operation.getRawButton(4)){
