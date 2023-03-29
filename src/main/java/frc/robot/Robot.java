@@ -318,12 +318,18 @@ public class Robot extends TimedRobot {
 
     if(operation.getRawButton(3)){
       GripperFlag = 0;
-      SmartDashboard.putString("Grip", "LOOKING");
       GripperSolenoid.set(DoubleSolenoid.Value.kReverse);
       if(gripperlimitswitch.get() == false){
-        SmartDashboard.putString("Grip", "SET");
         GripperFlag = 1;
       }
+    }
+
+    if(GripperFlag == 0){
+      SmartDashboard.putString("Grip", "LOOKING");
+    }
+
+    if(GripperFlag == 1){
+      SmartDashboard.putString("Grip", "SET");
     }
 
     if(operation.getRawButton(1) || ((GripperFlag == 1) && gripperlimitswitch.get() == true)){
@@ -419,11 +425,11 @@ public class Robot extends TimedRobot {
           Robot.winch.winchmotorspeed(0);
           liftdownflag = 0;
           winchretractflag = 0;
-        } else {
+        } else if(winchextend <= desiredwinchretract){
           Robot.winch.winchmotorspeed(0.8);
-        } /*else if(winchextend >= desiredwinchretract){
+        } else if(winchextend >= desiredwinchretract){
           winch.winchmotorspeed(-0.80);
-        }*/
+        }
       }
 
     
