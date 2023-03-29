@@ -28,7 +28,7 @@ public class LiftDownAuto extends CommandBase {
   public void execute() {
     double liftgo = Robot.lift.lifttravel();
     if(liftgo <= disiredliftticks){
-      Robot.lift.liftspeed(0.40);
+      Robot.lift.liftspeed(0.525);
     } else {
       Robot.lift.liftspeed(0);
     }

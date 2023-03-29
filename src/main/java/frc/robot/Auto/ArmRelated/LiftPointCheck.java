@@ -43,6 +43,7 @@ public class LiftPointCheck extends CommandBase {
   public boolean isFinished() {
     if((Robot.lift.lifttravel() <= disiredliftticks + 1 ) && (Robot.lift.lifttravel() >= disiredliftticks - 1)){
       Robot.lift.liftspeed(0);
+  
       return true;
     } else {
       return false;

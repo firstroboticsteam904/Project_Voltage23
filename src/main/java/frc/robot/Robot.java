@@ -8,7 +8,9 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Auto.DriveAuto;
+import frc.robot.Auto.ArmRelated.LiftPointCheck;
 import frc.robot.Auto.ArmRelated.WinchExtendAuto;
+import frc.robot.Auto.ArmRelated.WinchPointCheck;
 import frc.robot.Auto.AutoSelections.slightAdvanced;
 import frc.robot.Auto.ControlableAutos.OperationDown;
 import frc.robot.Auto.AutoSelections.driveback;
@@ -70,11 +72,11 @@ public class Robot extends TimedRobot {
 
   public DigitalInput gripperlimitswitch = new DigitalInput(0);
 
-  public int flagvariable = 1;
-  public int liftflag = 0;
+  public static int flagvariable = 1;
+  public static int liftflag = 0;
 
-  public int liftdownflag = 1;
-  public int winchretractflag = 0;
+  public static int liftdownflag = 1;
+  public static int winchretractflag = 0;
   
   // public static pigeon Pigeon;
   Compressor pcmCompressor = new Compressor(PneumaticsModuleType.REVPH);
@@ -82,14 +84,16 @@ public class Robot extends TimedRobot {
   public static DoubleSolenoid TiltSolenoid = m_pH.makeDoubleSolenoid(14, 2);
   Solenoid GearSolenoid = m_pH.makeSolenoid(1); // middle solenoid is a single solenoid
   public static DoubleSolenoid GripperSolenoid = m_pH.makeDoubleSolenoid(0, 15);
-  final double desiredliftplacement = -65;
+  final double desiredliftplacement = -70;
   final double desiredwinchextend = -60;
   final double desiredliftdown = 40;
   final double desiredwinchretract = -40;
 
   
    //Trigger button2 = new JoystickButton(operation, 2);    
-   
+   //Trigger button4 = new JoystickButton(drivematrix, 4);
+
+
   public static Timer ticktick = new Timer();
   public static Timer tocktock = new Timer();
   public static limelight distance;
@@ -242,10 +246,10 @@ public class Robot extends TimedRobot {
     }
 
     if (operation.getRawAxis(2) >= 0.50) { // if right joystick is pushed to the right turn the turn table to the right
-      turntable.turntablespeed(-0.6);
+      turntable.turntablespeed(-0.4);
     } else if (operation.getRawAxis(2) <= -0.50) { // if the right joystick is pushed to the left turn the turn table to
                                                    // the left
-      turntable.turntablespeed(0.6);
+      turntable.turntablespeed(0.4);
     } else
       turntable.turntablespeed(0);
 
@@ -342,14 +346,20 @@ public class Robot extends TimedRobot {
 
       if(liftflag == 1 && flagvariable == 1){
         double liftup = Robot.lift.lifttravel();
-        if(liftup <= desiredliftplacement){
+        if(liftup <= desiredliftplacement /*+ 1.5 && liftup >= desiredliftplacement - 1.5*/){
           Robot.lift.liftspeed(0);
           liftflag = 0;
           flagvariable = 0;
           SmartDashboard.putString("Lifting lift:", "Yes");
-        } else {
-          Robot.lift.liftspeed(-0.6);
-        }
+        } else{
+          Robot.lift.liftspeed(-0.50);
+        } 
+        /*else if(liftup <= desiredliftplacement){
+          lift.liftspeed(0.50);
+        } else if(liftup >= desiredliftplacement){
+          lift.liftspeed(-0.50);
+        }*/
+        
       }
 
       if(liftflag == 1 && flagvariable == 0){
@@ -362,6 +372,7 @@ public class Robot extends TimedRobot {
           Robot.winch.winchmotorspeed(-0.8);
           TiltSolenoid.set(Value.kReverse);
         }
+      
       }
 
 
@@ -390,18 +401,6 @@ public class Robot extends TimedRobot {
         }
       }
 
-      /*if(winchretractflag == 1 && liftdownflag == 1){
-        double winchretract = Robot.winch.winchtravel();
-        if(winchretract <= desiredwinchretract){
-          Robot.winch.winchmotorspeed(0);
-          liftdownflag =0;
-          winchretractflag = 0;
-        } else {
-          Robot.winch.winchmotorspeed(-0.8);
-        }
-      }*/
-
-
       /*if(drivematrix.getRawButton(4)){
         Pigeon.getPigeonValues();
         Pigeon.AutoBalanceRobot();
@@ -409,13 +408,15 @@ public class Robot extends TimedRobot {
 
       if(winchretractflag == 1 && liftdownflag == 1){
         double winchextend = Robot.winch.winchtravel();
-        if(winchextend >= desiredwinchretract){
+        if(winchextend >= desiredwinchretract - 2 && winchextend <= desiredwinchretract + 2){
           Robot.winch.winchmotorspeed(0);
           liftdownflag = 0;
           winchretractflag = 0;
         } else {
           Robot.winch.winchmotorspeed(0.8);
-        }
+        } /*else if(winchextend >= desiredwinchretract){
+          winch.winchmotorspeed(-0.80);
+        }*/
       }
 
     

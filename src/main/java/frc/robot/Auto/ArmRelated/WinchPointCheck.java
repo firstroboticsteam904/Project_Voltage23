@@ -44,6 +44,7 @@ public class WinchPointCheck extends CommandBase {
   public boolean isFinished() {
     if((Robot.winch.winchtravel() <= Desiredwinchticks - 1) && (Robot.winch.winchtravel() >= Desiredwinchticks + 1)){
       Robot.winch.winchmotorspeed(0);
+
       return true;
     }else {
     return false;

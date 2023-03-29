@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Auto.DriveAuto;
 import frc.robot.Auto.DriveForAuto;
 import frc.robot.Auto.ArmRelated.GrippersOpenAuto;
+import frc.robot.Auto.ArmRelated.LiftDownAuto;
 import frc.robot.Auto.ArmRelated.LiftUpAuto;
 import frc.robot.Auto.ArmRelated.TableRightAuto;
 import frc.robot.Auto.ArmRelated.TiltUpAuto;
@@ -27,14 +28,15 @@ public class BackNFor extends SequentialCommandGroup {
     new LiftUpAuto(-75), 
     new TableRightAuto(-23), 
     new TiltUpAuto(),
-    new WaitCommand(1), 
+    new WaitCommand(0.6), 
     new WinchExtendAuto(-65), //might be positive
     new WaitCommand(1),
+    new LiftDownAuto(-70),
     new GrippersOpenAuto(),
-    new WaitCommand(1),
+    new WaitCommand(0.6),
     new WinchRetractAuto(-40), //should be 0 or opposite +/- of extend
     new DriveAuto(0.37), 
-    new WaitCommand(2),
+    new WaitCommand(1.8),
     new DriveForAuto(0.195)
 
     );
